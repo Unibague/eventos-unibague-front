@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import DialogPage from './DialogPage';
 
 const StyledAppBar = styled(AppBar)`
   background-color: #003d7c; // Your app's primary color
@@ -48,7 +49,13 @@ const AppBarContent = () => (
 
     <Box sx={{ flexGrow: 1 }} />
 
-    <IconButton color="secondary" sx={{ display: 'flex'}}>
+    <IconButton color="secondary" sx={{ display: 'flex'}} >
+
+      {/* TODO funcionalidad para renderizar la bolita roja si hay notificacion nueva*/}
+
+      {/* Al hacer click en el ícono, renderiza el dialog*/}
+
+
       <Badge color="error" variant="dot" invisible={false}>
         <NotificationsIcon sx={{ fontSize: '37px' }}/>
       </Badge>

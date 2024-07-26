@@ -9,7 +9,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { Box } from '@mui/material';
 
 interface DialogPageProps {
   open: boolean;
@@ -50,12 +49,8 @@ const DialogPage: React.FC<DialogPageProps> = ({
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        {/* <DialogTitle>{"¿Cómo encuentro mi código?"}</DialogTitle> */}
         <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>
-          {/* <DialogContentText id="alert-dialog-slide-description">
-            Aquí va un video hecho por COMUNICACIÓN INSTITUCIONAL
-          </DialogContentText> */}
           {children}
         </DialogContent>
         <DialogActions>

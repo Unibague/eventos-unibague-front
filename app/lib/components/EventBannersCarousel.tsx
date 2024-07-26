@@ -1,25 +1,30 @@
+'use client'
 import React from 'react';
 import Carousel from 'react-material-ui-carousel'
 import { Paper, Button } from '@mui/material'
 import { Image } from '@mui/icons-material';
+import { Box } from '@mui/material'
+
 
 function EventBannersCarousel(props)
 {
     var items = [
+
         {
-            url: "https://wosc.world/images/WOSC%202024%20congress/WoscBanner_3600x1200.jpg",
+            url: "/images/wosc.jpg",
             id: 1
         },
         {
-            url: 'https://images6.alphacoders.com/133/1333846.png',
-            id: 2
-        }
+            url: "/images/wosc2.jpg",
+            id: 1
+        },
+
     ]
 
     return (
         <Carousel navButtonsAlwaysVisible={true}>
             {
-                items.map( (item, i) => <Item key={i} item={item} /> )
+                items.map( (item, i) => <Item key={i} item={item}/> )
             }
         </Carousel>
     )
@@ -28,8 +33,19 @@ function EventBannersCarousel(props)
 function Item({item})
 {
     return (
-            <img src={item.url} 
-            style={{width:'100%', height:'28vh', borderRadius: '5px'}}/>
+       
+        <Box component="img"
+        src={item.url}
+        sx={{width: '100%',
+            height: {
+                xs: '28vh',  // height for mobile devices
+                sm: '40vh',  // height for small screens
+                md: '50vh',  // height for medium screens
+                lg: '60vh'   // height for large screens
+            },
+            borderRadius: '5px'
+            }}>
+        </Box>
     )
 }
 

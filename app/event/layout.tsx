@@ -4,8 +4,7 @@ import {Box, Container, Grid} from '@mui/material';
 import React from 'react';
 import CustomAppBar from '../lib/components/CurvedAppBar';
 import Footer from '../lib/components/Footer';
-import EventBannersCarousel from '../lib/components/EventBannersCarousel';
-import EventActions from '../lib/components/EventActions';
+
 export default function EventLayout({
   children}: { children: React.ReactNode}) {
 
@@ -18,14 +17,18 @@ export default function EventLayout({
       }}
     >
       <CustomAppBar />
-      <Container component="main" sx={{ flexGrow: 1, mt:'60px', display: 'flex', flexDirection: 'column' }}>
+      
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {children}
+      </Box>
 
-      <EventBannersCarousel></EventBannersCarousel>
-
-      <Box sx={{ flexGrow: 1}}>{children}</Box>
-
-      <EventActions />
-      </Container>
       <Footer />
     </Box>
   );
