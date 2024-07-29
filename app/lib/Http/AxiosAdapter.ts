@@ -5,14 +5,15 @@ import { redirect } from "next/navigation";
 export class AxiosAdapter implements IHttpAdapter{
     
     private axiosInstance: AxiosInstance;
-    private handleError(error: AxiosError): void{
-        if (error.response?.status === 401){
-            //Redirect to login page
-            redirect('/googleLoginRedirect');
-        } else {
-            console.log("do some more logic");
-        }
-    }
+    // private handleError(error: AxiosError): void{
+    //     if (error.response?.status === 401){
+    //         //Redirect to login page
+    //         redirect('/googleLoginRedirect');
+    //     } else {
+    //         console.log("do some more logic");
+    //     }
+    // }
+    
     constructor(token: string){
         let config: AxiosRequestConfig = {
             baseURL: process.env.apiUrl as string,

@@ -1,64 +1,53 @@
+'use client'
+
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
+import {Event} from '../types'
+import { useRouter } from 'next/navigation';
 
-interface EventCardProps{
-  image: string,
-  name: string,
-  location: string,
-  startDate: Date,
-  endDate: Date,  
+interface EventCardProps {
+  event: Event;
 }
 
+const EventCard = ({event}: EventCardProps) => {
 
-export default function EventCard({image,name, location, startDate, endDate}: EventCardProps) {
+  const router = useRouter();
+  const handleSelectedEvent = () =>{
+    {/* If the event has restricted access... redirect to authentication logic*/}
+    if (event.restrictedAccess === true){
+      router.push('/auth');
+    }
+    {/* If not... simply render the EventLandingPage*/}
+      router.push(`/event/${event.id}`);
+  }
+
   return (
-
     <>
     <Card sx={{ maxWidth: 345, mb:'15px' }}>
-      <CardActionArea>
+      <CardActionArea onClick={handleSelectedEvent}>
         <CardMedia
           component="img"
           height="140"
-          image="https://wosc.world/images/WOSC 2024 congress/WoscBanner_3600x1200.jpg"
-          alt="green iguana"
+          image={event.cardImageUrl}
+          alt={event.name}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Wosc 19th Congress
+            {event.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Oxford, UK <br />
-            Sept 11-13
+            {event.location} <br/>
+            {event.startDate} - {event.endDate}
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
-
-    <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image="https://www.unibague.edu.co//images/2024/banners/bg-acreditacion-julio2.jpg"
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Semana de la ciencia
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Univsersidad de Ibagué, Tolima <br />
-            12/07/2024 - 17/07/2024
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-
-    
     </>
   );
 }
+
+export default EventCard;

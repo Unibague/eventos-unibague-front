@@ -1,7 +1,7 @@
 import Message from '@/app/lib/components/Message';
 import React from 'react'
 
-export const ViewMessagesPage = () => {
+const ViewMessagesPage = () => {
   return (
     <>
 
@@ -36,4 +36,4 @@ export const ViewMessagesPage = () => {
 }
 
 
-export default MessagesPage;
+export default ViewMessagesPage;

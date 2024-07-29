@@ -14,13 +14,10 @@ export class HttpClient{
     }
 
     public static getInstance(){
-        if (typeof window !== "undefined" && window.sessionStorage) {
-            const token = sessionStorage.getItem('token')
-            if (!HttpClient.instance || token !== null){
-                HttpClient.instance = new HttpClient(token)
-                return HttpClient.instance;
-            }
-        }
+
+        const token = "wef"
+
+        HttpClient.instance = new HttpClient(token)
         return HttpClient.instance;
     }
     
@@ -32,7 +29,6 @@ export class HttpClient{
     public get(url: string, data?: any){
         return HttpClient.instance.httpAdapter.get(url)
     }
-
 
 
     public post(url: string, data: any){

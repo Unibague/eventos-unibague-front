@@ -1,12 +1,20 @@
-'use client'
-
-import {Box, Container, Grid} from '@mui/material';
+import {Box} from '@mui/material';
 import React from 'react';
 import CustomAppBar from '../lib/components/CurvedAppBar';
 import Footer from '../lib/components/Footer';
+import { HttpClient } from '../lib/Http/HttpClient';
 
-export default function EventLayout({
-  children}: { children: React.ReactNode}) {
+interface EventLayoutProps {
+  children: React.ReactNode,
+  params:{
+    id: string
+  }
+}
+
+export default async function EventLayout({ children, params }: EventLayoutProps) {
+
+  console.log(params);
+
 
   return (
     <Box

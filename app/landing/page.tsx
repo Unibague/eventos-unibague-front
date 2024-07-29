@@ -1,17 +1,25 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import LandingBar from '../lib/components/LandingBar';
-import EventCard from '../lib/components/EventCard';
+import { HttpClient } from '../lib/Http/HttpClient';
+import EventList from '../lib/components/EventList';
+import { Event } from '../lib/types';
+import { convertSnakeToCamel } from '../lib/utils';
 
-export default function LandingPage({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+async function getEvents(): Promise<Event[]> {
+  try {
+    const http = HttpClient.getInstance();
+    let response = await http.get('/api/events');
+    const events = convertSnakeToCamel(response.data);
+    {/* If it got to this point is because the mapping was done correctly*/}
+    return events as Event[];
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+    return [];
+  }
+}
+
+const EventsLandingPage = async () => {
+  const events = await getEvents();
   return (
     <>
       <LandingBar />
@@ -28,19 +36,29 @@ export default function LandingPage({
           padding: 2,
         }}
       >
-        <Box sx={{ width: '100%', mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            width: '100%',
+            mb: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <Typography variant="h6" component="div">
             Todos los eventos
           </Typography>
-          <Button color="primary">
-            Filtrar
-          </Button>
+          <Button color="primary">Filtrar</Button>
         </Box>
 
-        <EventCard />
-
-        {children}
+        {events.length > 0 ? (
+          <EventList events={events} />
+        ) : (
+          <h2> There are no available events at the moment</h2>
+        )}
       </Grid>
     </>
   );
-}
+};
+
+export default EventsLandingPage;
