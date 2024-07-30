@@ -1,11 +1,15 @@
-import React from 'react';
+import { EventMessage } from '@/app/lib/types';
+
 
 interface messageProps {
-  timestamp: string;
-  message: string;
+  message: EventMessage
 }
 
-const Message = ({ message, timestamp }: messageProps) => {
+const Message = ({ message }: messageProps) => {
+
+
+  console.log(message);
+
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
       <div style={{
@@ -23,7 +27,7 @@ const Message = ({ message, timestamp }: messageProps) => {
         borderRadius: '10px',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
       }}>
-        <p style={{ margin: 0 }}> {message}</p>
+        <p style={{ margin: 0 }}> {message.content}</p>
         <div style={{
           position: 'absolute',
           fontSize: '.75em',
@@ -33,7 +37,7 @@ const Message = ({ message, timestamp }: messageProps) => {
           right: '10px',
           color: '#6c757d',
         }}>
-          {timestamp}
+          {message.createdAt}
         </div>
         <div style={{
           content: '""',

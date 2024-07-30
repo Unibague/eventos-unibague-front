@@ -1,5 +1,4 @@
-import AddMessageCard from '@/app/lib/components/AddMessageCard';
-import React from 'react'
+import AddMessageCard from '@/app/lib/components/Messages/AddMessageCard';
 
 export const AddMessagesPage = () => {
   return (

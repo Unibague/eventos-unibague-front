@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Grid } from '@mui/material';
 import EventCard from '../../lib/components/EventCard';
 import {Event} from '../types'

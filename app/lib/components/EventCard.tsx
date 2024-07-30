@@ -22,7 +22,7 @@ const EventCard = ({event}: EventCardProps) => {
       router.push('/auth');
     }
     {/* If not... simply render the EventLandingPage*/}
-      router.push(`/event/${event.id}`);
+      router.push(`/event/${event.id}/home`);
   }
 
   return (

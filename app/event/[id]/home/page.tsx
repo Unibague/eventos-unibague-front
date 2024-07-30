@@ -1,11 +1,13 @@
 
-import React from 'react'
 import EventBannersCarousel from '@/app/lib/components/EventBannersCarousel';
 import EventActions from '@/app/lib/components/EventActions';
 import {Box, Container, Grid} from '@mui/material';
 
 
-export const HomePage = () => {
+export const HomePage = ({params}) => {
+
+
+
   return (
     <>
     

@@ -1,39 +1,47 @@
-import Message from '@/app/lib/components/Message';
-import React from 'react'
-
-const ViewMessagesPage = () => {
-  return (
-    <>
-
-{/* Heere we have to render the array of messages coming from the DB*/}
+import Message from '@/app/lib/components/Messages/Message';
+import { HttpClient } from '@/app/lib/Http/HttpClient';
+import { EventMessage } from '@/app/lib/types';
+import { convertSnakeToCamel } from '@/app/lib/utils';
 
 
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-
-
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-
-
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-
-
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-<Message message='Hello guys, the meeting purposed to the previous day is going to be postponed to tomorrow, any issues?' timestamp='16:23 13/09/2024'/>
-
-
-    <Message message='Hello guys, the drinks are available at the bar' timestamp='16:23 13/09/2024'/>
-    </>
-  )
+interface viewMessagesProps{
+  params: {
+    id: number
+  }
 }
 
+async function getEventMessages(eventId: number): Promise <EventMessage[]> {
+
+  try {
+    const http = HttpClient.getInstance();
+    let response = await http.get(`/api/event/${eventId}/messages`);
+    let {data} = response
+    const eventMessages = data.map(element => {
+      return convertSnakeToCamel(element)
+    })
+    return eventMessages as EventMessage[];
+  } catch (error) {
+    console.error('Failed to fetch event messages:', error);
+    return null;
+  }
+
+}
+
+const ViewMessagesPage = async ({params}: viewMessagesProps) => {
+
+ const {id} = params
+ const messages = await getEventMessages(id);
+ console.log(messages);
+  
+  return (
+    <>
+      {messages.map(message => {
+              return (<Message
+              message = {message} key={message.id} />)
+      })}
+
+    </>
+  );
+};
 
 export default ViewMessagesPage;

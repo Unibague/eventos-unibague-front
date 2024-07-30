@@ -7,3 +7,9 @@ export interface Event {
     restrictedAccess: boolean;
     cardImageUrl: string;
   }
+
+  export interface EventMessage {
+    id: string;
+    content: string;
+    createdAt: string;
+  }  
