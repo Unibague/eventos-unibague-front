@@ -4,9 +4,9 @@ import EventActions from '@/app/lib/components/EventActions';
 import {Box, Container, Grid} from '@mui/material';
 
 
-export const HomePage = ({params}) => {
+const HomePage = ({params}) => {
 
-
+  const {id:eventId} = params;
 
   return (
     <>
@@ -17,7 +17,7 @@ export const HomePage = ({params}) => {
 
       <Box sx={{ flexGrow: 1}}></Box>
 
-      <EventActions />
+      <EventActions eventId={eventId}/>
 
     </Container>
 

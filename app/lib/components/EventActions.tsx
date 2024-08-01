@@ -1,12 +1,18 @@
-import React from 'react'
 import DateRangeRoundedIcon from '@mui/icons-material/DateRangeRounded';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
 import { Box, Paper, Typography } from '@mui/material';
 import EventActionCard from './EventActionCard';
+import Link from 'next/link';
 
 
-export const EventActions = () => {
+interface EventActionsProps{
+  eventId: number
+}
+
+
+export const EventActions = ({eventId}: EventActionsProps) => {
+
   return (
     <>
     
@@ -20,8 +26,10 @@ export const EventActions = () => {
 
     <EventActionCard icon={<DateRangeRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Agenda'/>
     <EventActionCard icon={<MailOutlineRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Contact Wosc'/>
-    <EventActionCard icon={<InsertCommentRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Message'/>
 
+    <Link href={`/event/${eventId}/messages/add`}>
+    <EventActionCard icon={<InsertCommentRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Message' />
+    </Link>
 
     </Box>
 

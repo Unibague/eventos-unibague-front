@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="116488aa-69f1-43ce-aa12-bb598a1ac2b4" name="Changes" comment="" />
+    <list default="true" id="116488aa-69f1-43ce-aa12-bb598a1ac2b4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,7 +34,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/laragon/www/Eventos-Unibague-Back",
+    "last_opened_file_path": "C:/laragon/www/Eventos-Unibague-Front",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -62,6 +64,7 @@
       <workItem from="1722263940755" duration="270000" />
       <workItem from="1722296024249" duration="75000" />
       <workItem from="1722347809715" duration="14000" />
+      <workItem from="1722382116909" duration="339000" />
     </task>
     <servers />
   </component>
