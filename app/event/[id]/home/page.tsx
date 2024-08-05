@@ -1,5 +1,4 @@
-
-import EventBannersCarousel from '@/app/lib/components/EventBannersCarousel';
+import EventCarousel from '@/app/lib/components/EventCarousel';
 import EventActions from '@/app/lib/components/EventActions';
 import {Box, Container, Grid} from '@mui/material';
 
@@ -13,7 +12,7 @@ const HomePage = ({params}) => {
     
     <Container component="main" sx={{ flexGrow: 1, mt:'60px', display: 'flex', flexDirection: 'column' }}>
 
-      <EventBannersCarousel></EventBannersCarousel>
+      <EventCarousel eventId={eventId}></EventCarousel>
 
       <Box sx={{ flexGrow: 1}}></Box>
 
