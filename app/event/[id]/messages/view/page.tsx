@@ -1,4 +1,5 @@
 import Message from '@/app/lib/components/Messages/Message';
+import MessagesList from '@/app/lib/components/Messages/MessagesList';
 import { HttpClient } from '@/app/lib/Http/HttpClient';
 import { EventMessage } from '@/app/lib/types';
 import { convertSnakeToCamel } from '@/app/lib/utils';
@@ -35,10 +36,11 @@ const ViewMessagesPage = async ({params}: viewMessagesProps) => {
   
   return (
     <>
-      {messages.map(message => {
-              return (<Message
-              message = {message} key={message.id} />)
-      })}
+
+      {messages.length > 0 ? 
+      <MessagesList messages={messages}/> 
+      : 
+      <h2 style={{textAlign:'center', margin:'auto'}}> This event has no messages yet! </h2>}
 
     </>
   );
