@@ -7,7 +7,6 @@ interface messageProps {
 
 const Message = ({ message }: messageProps) => {
 
-
   console.log(message);
 
   return (

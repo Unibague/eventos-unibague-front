@@ -1,30 +1,31 @@
-import { Grid, Link, TextField, Typography, Button } from '@mui/material';
+import { Grid, Typography, Button } from '@mui/material';
 import { Google } from '@mui/icons-material';
+import Link from 'next/link';
 
 export const Login = () => {
   return (
-    <>
-      <Typography variant="h5" sx={{ mb: 1, textAlign: 'center' }}>
-        Una nueva forma de gestionar tu dinero dentro del campus
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ minHeight: '100vh', textAlign: 'center', px:3 }}
+    >
+      <Typography variant="h5" sx={{ mb: 3 }}>
+        Eventos Unibagué
       </Typography>
-      <form>
-        <Grid container>
-          <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
-            <Grid item xs={12}>
-              <Button
-                href="/googleLoginRedirect"
-                variant="contained"
-                fullWidth
-                color="secondary"
-              >
-                <Google />
-                <Typography sx={{ ml: 1 }}>Ingresar con Google</Typography>
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </form>
-    </>
+      <Link href="/googleLoginRedirect">
+      <Button
+        variant="contained"
+        color="secondary"
+        fullWidth
+        sx={{ maxWidth: 400 }}
+      >
+        <Google />
+        <Typography sx={{ ml: 1 }}>Ingresar con Google</Typography>
+      </Button>
+      </Link>
+    </Grid>
   );
 };
 
