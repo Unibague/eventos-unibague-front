@@ -12,7 +12,6 @@ async function getEvents(): Promise<Event[]> {
     const events = response.data.map( (element: any) => {
       return convertSnakeToCamel(element);
     });
-
     {/* If it got to this point is because the mapping was done correctly*/}
     return events as Event[];
   } catch (error) {

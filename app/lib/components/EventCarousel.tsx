@@ -10,26 +10,26 @@ interface EventCarouselProps {
 }
 
 async function getEventFiles(eventId: number): Promise<EventFile[]> {
-  try {
-    const http = HttpClient.getInstance();
-    let response = await http.get(`/api/event/${eventId}/files`);
-    let { data } = response;
-    const eventFiles = data.map((element) => {
-      return convertSnakeToCamel(element);
-    });
-    return eventFiles as EventFile[];
-  } catch (error) {
-    console.error('Failed to fetch event files:', error);
-    return null;
+    
+    try {
+      const http = HttpClient.getInstance();
+      let response = await http.get(`/api/event/${eventId}/files`);
+      let { data } = response;
+      const eventFiles = data.map((element) => {
+        return convertSnakeToCamel(element);
+      });
+      return eventFiles as EventFile[];
+    } catch (error) {
+      console.error('Failed to fetch event files:', error);
+      return null;
+    }
   }
-}
+
 
 async function EventCarousel({ eventId }: EventCarouselProps) {
-  const items = await getEventFiles(eventId);
-  console.log(items);
-
+  const eventFiles = await getEventFiles(eventId);
   return (
-    <EventCarouselList eventFiles = {items}/>
+    <EventCarouselList eventFiles = {eventFiles}/>
   );
 }
 

@@ -2,7 +2,7 @@ import { AppBar } from '@mui/material';
 import WaveEffect from './WaveEffect';
 import AppBarContent from './AppBarContent';
 
-export default function AppBarContainer({event}) {
+export default function AppBarContainer({event, eventLogo}) {
   return (
     <AppBar
       position="static"
@@ -14,7 +14,7 @@ export default function AppBarContainer({event}) {
         paddingBottom: '25px',
       }}
     >
-      <AppBarContent event = {event} />
+      <AppBarContent event = {event} eventLogo= {eventLogo}/>
       <WaveEffect />
     </AppBar>
   );

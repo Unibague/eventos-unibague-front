@@ -15,7 +15,7 @@ export interface EventMessage {
 }
 
 export interface Payload {
-  url: string;
+  source: string;
   redirectUrl?: string; // Make optional if it might not always be present
 }
 
