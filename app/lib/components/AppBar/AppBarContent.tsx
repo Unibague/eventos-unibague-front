@@ -1,20 +1,21 @@
 import { Toolbar, Typography, Box, Badge, IconButton } from '@mui/material';
 import Link from 'next/link';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Event } from '../../types';
+import { Event, EventFile } from '../../types';
 import Image from 'next/image';
 
 interface AppBarProps {
   event: Event;
+  eventLogo: EventFile
 }
 
-const AppBarContent = ({ event }: AppBarProps) => {
+const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
   return (
     <Toolbar>
       <Typography variant="h6" noWrap color="#ffffff">
         <Link href={`/event/${event.id}/home`}>
           <Image
-            src="/images/logo_wosc_menu.png"
+            src={eventLogo.payload.source}
             alt="Event Logo"
             width={0}
             height={0}

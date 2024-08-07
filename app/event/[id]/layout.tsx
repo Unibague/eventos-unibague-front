@@ -26,11 +26,25 @@ async function getEvent(eventId: number): Promise<Event>  {
   }
 }
 
+async function getEventLogo(eventId: number)   {
+  try {
+    const http = HttpClient.getInstance();
+    let response = await http.get(`/api/event/${eventId}/eventFiles/logo`);
+    const eventLogo = convertSnakeToCamel(response.data);
+    return eventLogo
+  } catch (error) {
+    console.error('Failed to fetch eventLogo:', error);
+    return null;
+  }
+}
+
+
 export default async function EventLayout({ children, params }: EventLayoutProps) {
 
   const eventId = params.id 
-  const event = await getEvent(eventId)
-  // console.log(event);
+  const event = await getEvent(eventId);
+  const eventLogo = await getEventLogo(eventId);
+  console.log(eventLogo);
 
   return (
     <Box
@@ -40,7 +54,7 @@ export default async function EventLayout({ children, params }: EventLayoutProps
         minHeight: '100vh',
       }}
     >
-      <AppBarContainer event= {event}/>
+      <AppBarContainer event= {event} eventLogo = {eventLogo}/>
       
       <Box
         component="main"
