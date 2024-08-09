@@ -16,7 +16,6 @@ export class HttpClient{
     public static getInstance(){
 
         const token = "wef"
-
         HttpClient.instance = new HttpClient(token)
         return HttpClient.instance;
     }

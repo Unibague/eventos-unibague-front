@@ -31,6 +31,9 @@ const EventDetailsDialog = ({ event, open, onClose }) => {
 };
 
 const Calendar = () => {
+
+  console.log(events);
+
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(startOfDay(new Date()));

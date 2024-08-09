@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 export class AxiosAdapter implements IHttpAdapter{
     
     private axiosInstance: AxiosInstance;
+    private csrfTokenFetched: boolean = false;
     // private handleError(error: AxiosError): void{
     //     if (error.response?.status === 401){
     //         //Redirect to login page
@@ -25,7 +26,22 @@ export class AxiosAdapter implements IHttpAdapter{
             }
         };
         this.axiosInstance = axios.create(config)
+
+        // Fetch and set CSRF token
+        this.setCSRFToken();
+        
     }
+    private async setCSRFToken() {
+        if (!this.csrfTokenFetched) {
+            try {
+                await this.axiosInstance.get('/sanctum/csrf-cookie');
+                this.csrfTokenFetched = true;
+            } catch (error) {
+                console.error('Error fetching CSRF token:', error);
+            }
+        }
+    }
+
 
     public async get(url: string): Promise<any> {
         const response = await this.axiosInstance.get(url);

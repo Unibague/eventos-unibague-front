@@ -17,8 +17,8 @@ export const events = [
   // Today's events
   createEvent(today, 9, 11, 'A.Reyes words', 'Lady Margaret Hall'),
   createEvent(today, 14, 16, 'Raúl Espejo monologue', 'Mutis Auditory'),
-  createEvent(today, 17, 19, 'Julian padel game', 'Terekay'),
-  createEvent(today, 20, 21, 'Late Night Call'),
+  createEvent(today, 17, 18, 'Julian padel game', 'Terekay'),
+  createEvent(today, 19, 21, 'Late Night Call'),
 
   // Tomorrow's events (start times 1 hour later)
   createEvent(tomorrow, 10, 12, 'Project Kickoff'),
