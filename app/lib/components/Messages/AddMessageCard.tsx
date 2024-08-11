@@ -27,6 +27,7 @@
         setSnackbarColor("secondary.main")
         setOpenSnackbar(true);
       } catch (e) {
+        console.log('here')
         {/* Here I would need to generate another snackbar, but with a different message. The open and onClose properties remain the same*/}
         setSnackbarMessage(prepareErrorText(e))
         setSnackbarColor("error.main")
