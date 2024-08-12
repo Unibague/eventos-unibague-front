@@ -59,8 +59,6 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: Agend
             }
         };
 
-
-
         // Fetch data every 15 seconds
         const interval = setInterval(fetchEventMeetings, 15000); // 15000 ms = 15 seconds
 
