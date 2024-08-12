@@ -25,3 +25,15 @@ export interface EventFile {
   type: string;
   payload: Payload; // Define the payload property using the Payload interface
 }
+
+export interface EventMeeting {
+  id: string;
+  name: string;
+  description:string,
+  location: string,
+  startDate: string,
+  endDate: string,
+  onlineLink: string
+}
+
+

@@ -44,7 +44,7 @@ export default async function EventLayout({ children, params }: EventLayoutProps
   const eventId = params.id 
   const event = await getEvent(eventId);
   const eventLogo = await getEventLogo(eventId);
-  console.log(eventLogo);
+  // console.log(eventLogo);
 
   return (
     <Box
