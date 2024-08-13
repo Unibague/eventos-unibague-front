@@ -1,6 +1,8 @@
 
 import { AxiosAdapter } from "./AxiosAdapter";
 import { IHttpAdapter } from "./IHttpAdapter";
+import { cookies } from 'next/headers'
+
 
 export class HttpClient{
  
@@ -15,8 +17,8 @@ export class HttpClient{
 
     public static getInstance(){
 
-        const token = "wef"
-        HttpClient.instance = new HttpClient(token)
+        //Here i Should send the token
+        HttpClient.instance = new HttpClient('17|pNruYCgK5H57RKHnsnVs0pvq4LXE9NPJCTutAizt933c3935')
         return HttpClient.instance;
     }
     

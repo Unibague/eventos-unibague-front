@@ -4,6 +4,8 @@ import { HttpClient } from '../lib/Http/HttpClient';
 import EventList from '../lib/components/EventList';
 import { Event } from '../lib/types';
 import { convertSnakeToCamel } from '../lib/utils';
+import {getServerSession} from 'next-auth'
+
 
 async function getEvents(): Promise<Event[]> {
   try {
@@ -22,9 +24,16 @@ async function getEvents(): Promise<Event[]> {
 
 const EventsLandingPage = async () => {
   const events = await getEvents();
+
+  const session = await getServerSession();
+
+
   return (
     <>
       <LandingBar />
+
+      <pre> {JSON.stringify(session)}</pre>
+
 
       <Grid
         container

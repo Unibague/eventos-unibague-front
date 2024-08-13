@@ -8,6 +8,7 @@ import EventDetails from '@/app/lib/components/Agenda/EventDetails';
 import { HttpClient } from '@/app/lib/Http/HttpClient';
 import { EventMeeting } from '@/app/lib/types';
 import { convertSnakeToCamel } from '../../utils';
+import { useSession } from "next-auth/react";
 
 interface AgendaContainerProps {
     eventMeetings: EventMeeting[];
@@ -15,6 +16,11 @@ interface AgendaContainerProps {
 }
 
 const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: AgendaContainerProps) => {
+
+
+    const { data: session, status } = useSession();
+    console.log(session?.accessToken);
+
     const [eventMeetings, setEventMeetings] = useState(initialEventMeetings);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);

@@ -1,8 +1,10 @@
+'use client'
 import { Toolbar, Typography, Box, Badge, IconButton } from '@mui/material';
 import Link from 'next/link';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Event, EventFile } from '../../types';
 import Image from 'next/image';
+import {signIn, signOut, useSession} from 'next-auth/react'
 
 interface AppBarProps {
   event: Event;
@@ -10,6 +12,10 @@ interface AppBarProps {
 }
 
 const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
+
+  const {data: session} = useSession();
+  console.log({session});
+
   return (
     <Toolbar>
       <Typography variant="h6" noWrap color="#ffffff">
@@ -24,6 +30,24 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
           />
         </Link>
       </Typography>
+
+      {session ? 
+      <> 
+      <h6> {session?.user?.name} </h6>
+       
+       <button onClick={() => signOut()}> Sign Out</button> 
+      </>
+      
+      : 
+      
+      <> 
+      <h2> Not Signed it </h2>
+       
+       <button onClick={() => signIn()}> Sign In</button> 
+      </>
+      
+      }
+
 
       <Box sx={{ flexGrow: 1 }} />
 
