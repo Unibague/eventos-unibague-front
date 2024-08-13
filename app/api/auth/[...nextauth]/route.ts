@@ -16,12 +16,13 @@ export const authOptions: NextAuthOptions = {
             credentials: {
                 email: { label: "Email", type: "text", placeholder: "jsmith" },
                 password: { label: "Password", type: "password", placeholder: "*****" },
+
             },
 
             async authorize(credentials, req) {
 
                 const parsedCredentials = z.object({ email: z.string().email(), password: z.string().min(3) }).safeParse(credentials)
-                console.log(parsedCredentials);
+                const { eventId } = req.body;
 
                 if (!parsedCredentials.success) {
                     throw new Error('Check your email and password');
@@ -30,10 +31,10 @@ export const authOptions: NextAuthOptions = {
                 else {
                     const http = HttpClient.getInstance();
                     await http.get('sanctum/csrf-cookie')
-                    const user = parsedCredentials.data;
+                    const data = {user: parsedCredentials.data, eventId};
 
                     try {
-                        const resp = await http.post('api/auth/credentials', { user });
+                        const resp = await http.post('api/auth/credentials', data);
                         if (resp.data.status === 'error') {
                             throw new Error(resp.data.message);
                         }
@@ -41,8 +42,8 @@ export const authOptions: NextAuthOptions = {
                         const userData = resp.data.data;  // Capture all user data from response
                         return {
                             ...userData.user,
-                            accessToken: userData.access_token,
                             eventsAvailable: userData.events_available,
+                            // accessToken: userData.access_token,
                             // Add other fields as necessary
                         };
 
@@ -63,29 +64,27 @@ export const authOptions: NextAuthOptions = {
             const http = HttpClient.getInstance();
             await http.get('sanctum/csrf-cookie')
             const resp = await http.post('api/auth/google', { user })
-            if (resp.data?.access_token) {
-                user.accessToken = resp.data.access_token;
-                return true
-            } else {
-                return false
-            }
+            // if (resp.data?.access_token) {
+            //     user.accessToken = resp.data.access_token;
+            return resp.data
+            // } else {
+            //     return false
+            // }
         },
+
 
         async jwt({ token, user, account }) {
-            if (user) {
-                token.accessToken = user.accessToken;  // Assuming user has accessToken property
-            }
-            return {...user,...token};
+            return {...token, ...user};
         },
 
 
-        async session({ session, token,user }) {
+        async session({ session, token, user }) {
 
             // Send properties to the client, like an access_token and user id from a provider.
-            session.accessToken = token.accessToken
-            session.user.id = token.id
+            // session.accessToken = token.accessToken
+            session.user = token
 
-            return {...session,...token,...user}
+            return session
         },
     }
 }

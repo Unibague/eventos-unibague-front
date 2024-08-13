@@ -5,6 +5,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Event, EventFile } from '../../types';
 import Image from 'next/image';
 import {signIn, signOut, useSession} from 'next-auth/react'
+import LogoutIcon from '@mui/icons-material/Logout';
 
 interface AppBarProps {
   event: Event;
@@ -48,19 +49,22 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
       
       }
 
-
       <Box sx={{ flexGrow: 1 }} />
 
       <Link href={`/event/${event.id}/messages/view`} passHref>
         <IconButton color="secondary" sx={{ display: 'flex' }}>
-          {/* TODO funcionalidad para renderizar la bolita roja si hay notificacion nueva*/}
-
-          {/* Al hacer click en el ícono, lleva a la página de mensajes*/}
           <Badge color="error" variant="dot" invisible={false}>
-            <NotificationsIcon sx={{ fontSize: '37px' }} />
+            <NotificationsIcon sx={{ fontSize: '28px' }} />
           </Badge>
         </IconButton>
       </Link>
+
+      <Link href={`/event/${event.id}/messages/view`} passHref>
+        <IconButton color="secondary" sx={{ display: 'flex' }}>
+            <LogoutIcon sx={{ fontSize: '20px' }} />
+        </IconButton>
+      </Link>
+
     </Toolbar>
   );
 };

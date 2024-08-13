@@ -2,6 +2,7 @@
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from 'next/navigation'
 import { useState } from "react";
 import {
   Box,
@@ -13,6 +14,7 @@ import {
 } from "@mui/material";
 
 function LoginPage() {
+
   const {
     register,
     handleSubmit,
@@ -21,12 +23,17 @@ function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState(null);
 
+  const searchParams = useSearchParams()
+  const eventId = searchParams.get('eventId')
+  console.log(eventId, 'Id del evento que quiero enviar al back');
+  
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
 
     const res = await signIn("credentials", {
       email: data.email,
       password: data.password,
+      eventId,
       redirect: false,
     });
 
@@ -34,7 +41,7 @@ function LoginPage() {
     if (res.error) {
       setError(res.error);
     } else {
-      router.push("/event/1/home");
+      router.push(`/event/${eventId}/home`);
       router.refresh();
     }
   });

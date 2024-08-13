@@ -7,22 +7,39 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import {Event} from '../types'
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname,} from 'next/navigation';
+import { useSession } from "next-auth/react";
+
 
 interface EventCardProps {
   event: Event;
 }
 
 const EventCard = ({event}: EventCardProps) => {
-
+  const { data: session } = useSession();
   const router = useRouter();
+  // const pathname = usePathname();
+
+  // const handleSelectedEvent = () =>{
+
+  //   const params = new URLSearchParams({
+  //     eventId: event.id.toString(),
+  //     restrictedAccess: event.restrictedAccess.toString(),
+  //   });
+
+  //   const newUrl = `/event/${event.id}/home?${params.toString()}`;
+
+  //   router.push(newUrl);
+  // }
+
   const handleSelectedEvent = () =>{
-    {/* If the event has restricted access... redirect to authentication logic*/}
-    if (event.restrictedAccess === true){
-      router.push('/auth');
+
+    if(session){
+      router.push( `/event/${event.id}/home`);
+    } else {
+      router.push( `/auth/login?eventId=${event.id}`);
     }
-    {/* If not... simply render the EventLandingPage*/}
-      router.push(`/event/${event.id}/home`);
+
   }
 
   return (

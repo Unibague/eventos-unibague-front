@@ -36,4 +36,3 @@ export interface EventMeeting {
   onlineLink: string
 }
 
-
