@@ -19,7 +19,7 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: Agend
 
 
     const { data: session, status } = useSession();
-    console.log(session?.accessToken);
+    console.log(session);
 
     const [eventMeetings, setEventMeetings] = useState(initialEventMeetings);
     const [selectedEvent, setSelectedEvent] = useState(null);

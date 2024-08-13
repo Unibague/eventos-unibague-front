@@ -32,7 +32,6 @@ const ViewMessagesPage = async ({params}: viewMessagesProps) => {
 
  const {id} = params
  const messages = await getEventMessages(id);
- console.log(messages);
   
   return (
     <>

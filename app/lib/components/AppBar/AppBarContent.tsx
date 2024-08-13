@@ -14,7 +14,7 @@ interface AppBarProps {
 const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
 
   const {data: session} = useSession();
-  console.log({session});
+  // console.log({session});
 
   return (
     <Toolbar>
@@ -41,7 +41,7 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
       : 
       
       <> 
-      <h2> Not Signed it </h2>
+      <h6> Not Signed it </h6>
        
        <button onClick={() => signIn()}> Sign In</button> 
       </>

@@ -35,11 +35,12 @@
     "postcss": "8.4.31",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.52.2",
     "react-material-ui-carousel": "^3.4.2",
     "recharts": "^2.13.0-alpha.4",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
-    "zod": "^3.22.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.1",

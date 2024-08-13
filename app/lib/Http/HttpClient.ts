@@ -1,7 +1,7 @@
 
 import { AxiosAdapter } from "./AxiosAdapter";
 import { IHttpAdapter } from "./IHttpAdapter";
-import { cookies } from 'next/headers'
+import {signIn, signOut, useSession} from 'next-auth/react'
 
 
 export class HttpClient{
@@ -11,14 +11,12 @@ export class HttpClient{
 
     private constructor(token){
         //Here we define what implementation we want to use. In this case I chose Axios
-        // const token = HttpClient.getTokenFromCookies()
         this.httpAdapter = new AxiosAdapter(token)
     }
 
-    public static getInstance(){
-
+    public static getInstance(token?: string){
         //Here i Should send the token
-        HttpClient.instance = new HttpClient('17|pNruYCgK5H57RKHnsnVs0pvq4LXE9NPJCTutAizt933c3935')
+        HttpClient.instance = new HttpClient(token)
         return HttpClient.instance;
     }
     

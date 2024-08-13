@@ -22,12 +22,12 @@ const Footer = ({event}: FooterProps) => {
         <Grid container>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle1" color='white'>
-              {event.name}
+              {event?.name}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6} container justifyContent="space-between" alignItems="center">
             <Typography variant="subtitle2" color='white'>
-              {event.startDate} - {event.endDate}
+              {event?.startDate} - {event?.endDate}
             </Typography>
             <Box
               sx={{
@@ -41,7 +41,7 @@ const Footer = ({event}: FooterProps) => {
               src="/images/powered.png"
               alt="Event Image"
               layout="fill"
-              style={{ marginLeft:'0px', opacity:0.3 }} 
+              style={{ marginLeft:'0px' }} 
               
             />
             </Box>

@@ -26,20 +26,6 @@ export class AxiosAdapter implements IHttpAdapter{
             }
         };
         this.axiosInstance = axios.create(config)
-
-        // Fetch and set CSRF token
-        this.setCSRFToken();
-        
-    }
-    private async setCSRFToken() {
-        if (!this.csrfTokenFetched) {
-            try {
-                await this.axiosInstance.get('/sanctum/csrf-cookie');
-                this.csrfTokenFetched = true;
-            } catch (error) {
-                console.error('Error fetching CSRF token:', error);
-            }
-        }
     }
 
 

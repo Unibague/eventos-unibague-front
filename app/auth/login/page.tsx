@@ -1,32 +1,113 @@
-import { Grid, Typography, Button } from '@mui/material';
-import { Google } from '@mui/icons-material';
-import Link from 'next/link';
+"use client";
+import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Alert,
+  Container,
+} from "@mui/material";
 
-export const Login = () => {
+function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const router = useRouter();
+  const [error, setError] = useState(null);
+
+  const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
+
+    const res = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    console.log(res);
+    if (res.error) {
+      setError(res.error);
+    } else {
+      router.push("/event/1/home");
+      router.refresh();
+    }
+  });
+
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      sx={{ minHeight: '100vh', textAlign: 'center', px:3 }}
+    <Container
+      sx={{
+        height: "calc(100vh - 7rem)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
-      <Typography variant="h5" sx={{ mb: 3 }}>
-        Eventos Unibagué
-      </Typography>
-      <Link href="/googleLoginRedirect">
-      <Button
-        variant="contained"
-        color="secondary"
-        fullWidth
-        sx={{ maxWidth: 400 }}
+      <Box
+        component="form"
+        onSubmit={onSubmit}
+        sx={{
+          width: "100%",
+          maxWidth: 400,
+          backgroundColor: "background.paper",
+          padding: 4,
+          borderRadius: 2,
+          boxShadow: 1,
+        }}
       >
-        <Google />
-        <Typography sx={{ ml: 1 }}>Ingresar con Google</Typography>
-      </Button>
-      </Link>
-    </Grid>
-  );
-};
+        {error && (
+          <Alert severity="error" sx={{ marginBottom: 2 }}>
+            {error}
+          </Alert>
+        )}
 
-export default Login;
+        <Typography variant="h4" component="h1" gutterBottom textAlign={'center'}>
+          Eventos Unibagué
+        </Typography>
+
+        <TextField
+          label="Email"
+          type="email"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+          {...register("email", {
+            required: "Email is required",
+          })}
+          error={!!errors.email}
+          helperText={errors.email?.message}
+        />
+
+        <TextField
+          label="Password"
+          type="password"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+          {...register("password", {
+            required: "Password is required",
+          })}
+          error={!!errors.password}
+          helperText={errors.password?.message}
+        />
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ marginTop: 2 }}
+        >
+          Login
+        </Button>
+      </Box>
+    </Container>
+  );
+}
+
+export default LoginPage;
