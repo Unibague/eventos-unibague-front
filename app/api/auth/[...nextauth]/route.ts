@@ -14,8 +14,8 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "text", placeholder: "jsmith" },
-                password: { label: "Password", type: "password", placeholder: "*****" },
+                email: { label: "Email", type: "text", placeholder: "example@domain.com" },
+                password: { label: "Password", type: "password", placeholder: "******" },
 
             },
 
@@ -43,6 +43,7 @@ export const authOptions: NextAuthOptions = {
                         return {
                             ...userData.user,
                             eventsAvailable: userData.events_available,
+                            userEventsAdmin: userData.user_events_admin
                             // accessToken: userData.access_token,
                             // Add other fields as necessary
                         };

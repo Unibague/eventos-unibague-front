@@ -1,20 +1,18 @@
-"use client";
-import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from 'next/navigation'
-import { useState } from "react";
+'use client';
+import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import {
   Box,
   Button,
   TextField,
-  Typography,
   Alert,
   Container,
-} from "@mui/material";
+} from '@mui/material';
 
 function LoginPage() {
-
   const {
     register,
     handleSubmit,
@@ -23,21 +21,19 @@ function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState(null);
 
-  const searchParams = useSearchParams()
-  const eventId = searchParams.get('eventId')
+  const searchParams = useSearchParams();
+  const eventId = searchParams.get('eventId');
   console.log(eventId, 'Id del evento que quiero enviar al back');
-  
-  const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
 
-    const res = await signIn("credentials", {
+  const onSubmit = handleSubmit(async (data) => {
+
+    const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
       eventId,
       redirect: false,
     });
 
-    console.log(res);
     if (res.error) {
       setError(res.error);
     } else {
@@ -49,33 +45,33 @@ function LoginPage() {
   return (
     <Container
       sx={{
-        height: "calc(100vh - 7rem)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        height: 'calc(100vh - 7rem)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <Box
         component="form"
         onSubmit={onSubmit}
         sx={{
-          width: "100%",
+          width: '100%',
           maxWidth: 400,
-          backgroundColor: "background.paper",
+          backgroundColor: 'background.paper',
           padding: 4,
           borderRadius: 2,
           boxShadow: 1,
         }}
       >
+        <Alert color="warning">
+          This is a restricted event, please sign in to continue.
+        </Alert>
+
         {error && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>
+          <Alert severity="error" sx={{ marginY: 2, }}>
             {error}
           </Alert>
         )}
-
-        <Typography variant="h4" component="h1" gutterBottom textAlign={'center'}>
-          Eventos Unibagué
-        </Typography>
 
         <TextField
           label="Email"
@@ -83,8 +79,9 @@ function LoginPage() {
           fullWidth
           variant="outlined"
           margin="normal"
-          {...register("email", {
-            required: "Email is required",
+          placeholder="example@domain.com"
+          {...register('email', {
+            required: 'Email is required',
           })}
           error={!!errors.email}
           helperText={errors.email?.message}
@@ -96,8 +93,9 @@ function LoginPage() {
           fullWidth
           variant="outlined"
           margin="normal"
-          {...register("password", {
-            required: "Password is required",
+          placeholder="******"
+          {...register('password', {
+            required: 'Password is required',
           })}
           error={!!errors.password}
           helperText={errors.password?.message}

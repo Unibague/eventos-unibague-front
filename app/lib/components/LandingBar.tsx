@@ -12,11 +12,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import LoginIcon from '@mui/icons-material/Login';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+
 
 
 export default function LandingBar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const router = useRouter()
+  const session = useSession();
+  //TODO: Pendiente implementar el session para saber si hay usuario
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -39,6 +47,11 @@ export default function LandingBar() {
           </Typography>
           {auth && (
             <div>
+
+          <IconButton size='large' onClick={() => router.push(`/auth/login`)}>
+            <LoginIcon sx={{ color:'white'}}/>
+          </IconButton>
+
               <IconButton
                 size="large"
                 aria-label="account of current user"

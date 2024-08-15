@@ -1,46 +1,69 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+'use client'
+
+import { Box, Button, Grid, Typography, CircularProgress } from '@mui/material';
 import LandingBar from '../lib/components/LandingBar';
 import { HttpClient } from '../lib/Http/HttpClient';
 import EventList from '../lib/components/EventList';
 import { Event } from '../lib/types';
 import { convertSnakeToCamel } from '../lib/utils';
-import {getServerSession} from 'next-auth'
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from 'react';
 
+const EventsLandingPage = () => {
+  
+  const { data: session, status } = useSession();
+  const [events, setEvents] = useState<Event[] | null>(null)
+  const [error, setError] = useState(null);
 
-async function getEvents(): Promise<Event[]> {
-  try {
-    const http = HttpClient.getInstance();
-    let response = await http.get('/api/events');
-    const events = response.data.map( (element: any) => {
-      return convertSnakeToCamel(element);
-    });
-    {/* If it got to this point is because the mapping was done correctly*/}
-    return events as Event[];
-  } catch (error) {
-    console.error('Failed to fetch events:', error);
-    return [];
+  useEffect(() => {
+    async function getEvents() {
+      try {
+        const http = HttpClient.getInstance();
+        let response = await http.get('/api/events');
+        const events = response.data.map( (element: any) => {
+          return convertSnakeToCamel(element);
+        });
+        setEvents(events as Event[])
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+        setError(error);
+      }
+    }
+
+    getEvents();
+  }, []);
+
+  if (error) {
+    return <div>Error loading events, please try again later</div>;
   }
-}
 
-const EventsLandingPage = async () => {
-  const events = await getEvents();
-
-  const session = await getServerSession();
-
+  if (!events) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
       <LandingBar />
 
-      <pre> {JSON.stringify(session)}</pre>
-
+      {/* <pre> {JSON.stringify(session)}</pre> */}
 
       <Grid
         container
         spacing={0}
         direction="column"
-        alignItems="stretch" // Adjust to ensure children fill available space
-        justifyContent="flex-start" // Align items to start
+        alignItems="stretch"
+        justifyContent="flex-start"
         sx={{
           minHeight: '100vh',
           backgroundColor: 'primary.alternative',

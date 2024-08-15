@@ -1,10 +1,12 @@
-import {Box} from '@mui/material';
+import {Box, IconButton} from '@mui/material';
 import React from 'react';
 import AppBarContainer from '../../lib/components/AppBar/AppBarContainer';
 import Footer from '../../lib/components/Footer';
 import { HttpClient } from '../../lib/Http/HttpClient';
 import { Event } from '@/app/lib/types';
 import { convertSnakeToCamel } from '@/app/lib/utils';
+import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
+import Link from 'next/link';
 
 
 interface EventLayoutProps {
@@ -56,6 +58,10 @@ export default async function EventLayout({ children, params }: EventLayoutProps
     >
       <AppBarContainer event= {event} eventLogo = {eventLogo}/>
       
+      <Link href={`/event/${eventId}/home`} passHref>
+        <ArrowCircleLeftRoundedIcon sx={{ fontSize: '35px' , color:'primary.main', mx:'15px'}}/>
+      </Link>
+
       <Box
         component="main"
         sx={{

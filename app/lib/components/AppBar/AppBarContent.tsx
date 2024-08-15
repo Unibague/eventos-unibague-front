@@ -1,25 +1,33 @@
-'use client'
+'use client';
 import { Toolbar, Typography, Box, Badge, IconButton } from '@mui/material';
 import Link from 'next/link';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Event, EventFile } from '../../types';
 import Image from 'next/image';
-import {signIn, signOut, useSession} from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
+import { useRouter } from 'next/navigation';
+
 
 interface AppBarProps {
   event: Event;
-  eventLogo: EventFile
+  eventLogo: EventFile;
 }
 
 const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  const {data: session} = useSession();
   // console.log({session});
 
   return (
     <Toolbar>
-      <Typography variant="h6" noWrap color="#ffffff">
+      <IconButton onClick={() => router.push('/landing')}>
+        <HomeIcon sx={{ fontSize: '35px' , color:'secondary.main'}}/>
+      </IconButton>
+
+      {/* <Typography variant="h6" noWrap color="#ffffff">
         <Link href={`/event/${event.id}/home`}>
           <Image
             src={eventLogo.payload.source}
@@ -27,29 +35,16 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
             width={0}
             height={0}
             sizes="100vw"
-            style={{ width: '30%', height: 'auto', borderRadius:'15px'}}
+            style={{ width: '30%', height: 'auto', borderRadius: '15px' }}
           />
         </Link>
-      </Typography>
+      </Typography> */}
 
-      {session ? 
-      <> 
-      <h6> {session?.user?.name} </h6>
-       
-       <button onClick={() => signOut()}> Sign Out</button> 
-      </>
-      
-      : 
-      
-      <> 
-      <h6> Not Signed it </h6>
-       
-       <button onClick={() => signIn()}> Sign In</button> 
-      </>
-      
-      }
+ 
 
       <Box sx={{ flexGrow: 1 }} />
+
+      {session ? <h6>{session?.user.name}</h6> : null}
 
       <Link href={`/event/${event.id}/messages/view`} passHref>
         <IconButton color="secondary" sx={{ display: 'flex' }}>
@@ -59,12 +54,17 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
         </IconButton>
       </Link>
 
-      <Link href={`/event/${event.id}/messages/view`} passHref>
-        <IconButton color="secondary" sx={{ display: 'flex' }}>
-            <LogoutIcon sx={{ fontSize: '20px' }} />
-        </IconButton>
-      </Link>
-
+      {session ? (
+        <>
+          <IconButton
+            onClick={() => signOut({ callbackUrl: '/landing' })}
+            color="secondary"
+            sx={{ display: 'flex' }}
+          >
+            <LogoutIcon sx={{ fontSize: '25px' }} />
+          </IconButton>
+        </>
+      ) : null}
     </Toolbar>
   );
 };

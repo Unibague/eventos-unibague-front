@@ -9,38 +9,48 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 import {Event} from '../types'
 import { useRouter, usePathname,} from 'next/navigation';
 import { useSession } from "next-auth/react";
-
+import {userCanAccessEvent} from '@/app/lib/utils/index'
+import Notification from './Notification';
 
 interface EventCardProps {
   event: Event;
 }
 
 const EventCard = ({event}: EventCardProps) => {
+  
   const { data: session } = useSession();
   const router = useRouter();
-  // const pathname = usePathname();
+  const [notificationOpen, setNotificationOpen] = React.useState(false);
 
-  // const handleSelectedEvent = () =>{
-
-  //   const params = new URLSearchParams({
-  //     eventId: event.id.toString(),
-  //     restrictedAccess: event.restrictedAccess.toString(),
-  //   });
-
-  //   const newUrl = `/event/${event.id}/home?${params.toString()}`;
-
-  //   router.push(newUrl);
-  // }
+  console.log(session);
 
   const handleSelectedEvent = () =>{
 
-    if(session){
-      router.push( `/event/${event.id}/home`);
-    } else {
-      router.push( `/auth/login?eventId=${event.id}`);
+    if(event.restrictedAccess == true){
+      if (session){
+        //Ok then, validate if the user has access to that specific event
+        const user = session.user;
+        const userAccessibleEvents = user.eventsAvailable;
+        const hasAccess = userCanAccessEvent(event.id, userAccessibleEvents)
+        if (hasAccess){
+          router.push( `/event/${event.id}/home`);
+        }
+        else{
+          setNotificationOpen(true);
+        }
+      }
+      else{
+          router.push( `/auth/login?eventId=${event.id}`);
+      }
     }
-
+    else{
+      router.push( `/event/${event.id}/home`);
+    }
   }
+
+  const handleNotificationClose = () => {
+    setNotificationOpen(false);
+  };
 
   return (
     <>
@@ -63,6 +73,14 @@ const EventCard = ({event}: EventCardProps) => {
         </CardContent>
       </CardActionArea>
     </Card>
+
+    <Notification
+        message="You are not in the allowed list of users for this event"
+        open={notificationOpen}
+        onClose={handleNotificationClose}
+        snackbarColor="secondary.main"
+    />
+
     </>
   );
 }

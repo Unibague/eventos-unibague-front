@@ -6,6 +6,7 @@ import { convertSnakeToCamel } from '@/app/lib/utils';
 import { EventMeeting } from '@/app/lib/types';
 import AgendaContainer from '@/app/lib/components/Agenda/AgendaContainer';
 import { useSession } from "next-auth/react";
+import { Box, CircularProgress } from '@mui/material';
 
 const AgendaPage = ({ params }) => {
   const { id: eventId } = params;
@@ -13,16 +14,13 @@ const AgendaPage = ({ params }) => {
   const [error, setError] = useState(null);
   
   const { data: session, status } = useSession();
-  const accessToken = session?.accessToken ?? "";
-  console.log(accessToken);
-
 
   useEffect(() => {
 
     const fetchEventMeetings = async () => {
 
       try {
-        const http = HttpClient.getInstance(accessToken);
+        const http = HttpClient.getInstance();
         const response = await http.get(`/api/event/${eventId}/meetings`);
         const { data } = response;
         const meetings = data.map(element => convertSnakeToCamel(element));
@@ -33,12 +31,6 @@ const AgendaPage = ({ params }) => {
       }
     };
 
-    // const testingRequest = async () => {
-    //   const http = HttpClient.getInstance(accessToken);
-    //   const response = await http.get(`/api/userData/test`);
-    //   console.log(response.data);
-    // }
-
     fetchEventMeetings();
   }, [eventId]);
 
@@ -47,7 +39,18 @@ const AgendaPage = ({ params }) => {
   }
 
   if (!eventMeetings) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return <AgendaContainer eventMeetings={eventMeetings} eventId={eventId} />;

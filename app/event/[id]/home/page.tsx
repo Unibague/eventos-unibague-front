@@ -10,7 +10,7 @@ const HomePage = ({params}) => {
   return (
     <>
     
-    <Container component="main" sx={{ flexGrow: 1, mt:'60px', display: 'flex', flexDirection: 'column' }}>
+    <Container component="main" sx={{ flexGrow: 1, mt:'10px', display: 'flex', flexDirection: 'column' }}>
 
       <EventCarousel eventId={eventId}></EventCarousel>
 
