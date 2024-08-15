@@ -1,11 +1,12 @@
+import React from 'react';
 import AddMessageCard from '@/app/lib/components/Messages/AddMessageCard';
 
-export const AddMessagesPage = () => {
+const AddMessagesPage: React.FC = () => {
   return (
     <>
-        <AddMessageCard></AddMessageCard>
+      <AddMessageCard />
     </>
-  )
-}
+  );
+};
 
 export default AddMessagesPage;

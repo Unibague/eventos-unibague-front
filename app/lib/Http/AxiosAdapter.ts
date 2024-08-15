@@ -6,16 +6,9 @@ export class AxiosAdapter implements IHttpAdapter{
     
     private axiosInstance: AxiosInstance;
     private csrfTokenFetched: boolean = false;
-    // private handleError(error: AxiosError): void{
-    //     if (error.response?.status === 401){
-    //         //Redirect to login page
-    //         redirect('/googleLoginRedirect');
-    //     } else {
-    //         console.log("do some more logic");
-    //     }
-    // }
+
     
-    constructor(token: string){
+    constructor(token?: string){
         let config: AxiosRequestConfig = {
             baseURL: process.env.apiUrl as string,
             withCredentials: true,
@@ -27,7 +20,6 @@ export class AxiosAdapter implements IHttpAdapter{
         };
         this.axiosInstance = axios.create(config)
     }
-
 
     public async get(url: string): Promise<any> {
         const response = await this.axiosInstance.get(url);
@@ -50,7 +42,7 @@ export class AxiosAdapter implements IHttpAdapter{
         return response;
     }  
 
-    public changeDefaultRoute (baseURL){
+    public changeDefaultRoute (baseURL: string){
         this.axiosInstance.defaults.baseURL = baseURL
     }
 

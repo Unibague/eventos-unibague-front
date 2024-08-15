@@ -1,8 +1,7 @@
 import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button} from '@mui/material';
 import { format,} from 'date-fns';
 
-
-const EventDetailsDialog = ({ event, open, onClose }) => {
+const EventDetailsDialog = ({ event, open, onClose }: any) => {
     if (!event) return null;
     return (
       <Dialog open={open} onClose={onClose}>

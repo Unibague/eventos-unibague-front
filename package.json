@@ -19,6 +19,7 @@
     "@mui/material-nextjs": "^5.15.11",
     "@mui/styles": "^5.16.5",
     "@tailwindcss/forms": "^0.5.7",
+    "@types/next-auth": "^3.15.0",
     "@types/node": "20.5.7",
     "@vercel/postgres": "^0.5.0",
     "autoprefixer": "10.4.15",
@@ -38,6 +39,7 @@
     "react-hook-form": "^7.52.2",
     "react-material-ui-carousel": "^3.4.2",
     "recharts": "^2.13.0-alpha.4",
+    "sharp": "^0.33.4",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
     "zod": "^3.23.8"

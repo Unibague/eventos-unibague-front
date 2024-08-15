@@ -11,13 +11,13 @@ interface viewMessagesProps{
   }
 }
 
-async function getEventMessages(eventId: number): Promise <EventMessage[]> {
+async function getEventMessages(eventId: number): Promise <EventMessage[] | null> {
 
   try {
     const http = HttpClient.getInstance();
     let response = await http.get(`/api/event/${eventId}/messages`);
     let {data} = response
-    const eventMessages = data.map(element => {
+    const eventMessages = data.map((element: any) => {
       return convertSnakeToCamel(element)
     })
     return eventMessages as EventMessage[];
@@ -35,8 +35,7 @@ const ViewMessagesPage = async ({params}: viewMessagesProps) => {
   
   return (
     <>
-
-      {messages.length > 0 ? 
+      {messages && messages.length > 0 ? 
       <MessagesList messages={messages}/> 
       : 
       <h2 style={{textAlign:'center', margin:'auto'}}> This event has no messages yet! </h2>}

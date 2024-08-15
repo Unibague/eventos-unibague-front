@@ -8,10 +8,19 @@ import AgendaContainer from '@/app/lib/components/Agenda/AgendaContainer';
 import { useSession } from "next-auth/react";
 import { Box, CircularProgress } from '@mui/material';
 
-const AgendaPage = ({ params }) => {
+
+interface AgendaPageProps {
+  params: {
+    id: string;
+  };
+}
+
+
+
+const AgendaPage = ({ params }: AgendaPageProps) => {
   const { id: eventId } = params;
   const [eventMeetings, setEventMeetings] = useState<EventMeeting[] | null>(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   
   const { data: session, status } = useSession();
 
@@ -23,7 +32,7 @@ const AgendaPage = ({ params }) => {
         const http = HttpClient.getInstance();
         const response = await http.get(`/api/event/${eventId}/meetings`);
         const { data } = response;
-        const meetings = data.map(element => convertSnakeToCamel(element));
+        const meetings = data.map((element: any)=> convertSnakeToCamel(element));
         setEventMeetings(meetings as EventMeeting[]);
       } catch (error) {
         console.error('Failed to fetch event messages:', error);

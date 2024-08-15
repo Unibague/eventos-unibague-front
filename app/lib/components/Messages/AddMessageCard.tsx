@@ -48,7 +48,7 @@
         >
           <Card sx={{ padding: '15px' }}>
             <Typography variant="h6">Add a Message</Typography>
-            <Typography variant="p">
+            <Typography >
               Please write the message you want to send, everyone who is in the app
               will be able to see it.
             </Typography>

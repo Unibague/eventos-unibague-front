@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useSession } from "next-auth/react";
 
 
+
 interface EventActionsProps{
   eventId: number
 }
@@ -36,12 +37,12 @@ export const EventActions = ({eventId}: EventActionsProps) => {
     <EventActionCard icon={<DateRangeRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Agenda'/>
     </Link>
 
-    <Link href={`mailto:jest.gmor@gmail.com?subject=Event%20Contact&body=Hello,%20I%20have%20a%20question%20about%20the%20event`}  style={{textDecoration:'none', color: 'inherit'}}>
+    <Link href={`mailto:wosc.org@gmail.com?subject=Event%20Contact&body=Hello,%20I%20have%20a%20question%20about%20the%20event`}  style={{textDecoration:'none', color: 'inherit'}}>
     <EventActionCard icon={<MailOutlineRoundedIcon color='primary' sx={{ fontSize: '60px'}} />} title='Contact'/>
     </Link>
 
      {
-      userEventsAdmin.some(event => event == eventId) && 
+      userEventsAdmin.some((event: number)  => event == eventId) && 
       <Link href={`/event/${eventId}/messages/add`} style={{textDecoration:'none', color: 'inherit'}}>
       <EventActionCard icon={<InsertCommentRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Message' />
       </Link>

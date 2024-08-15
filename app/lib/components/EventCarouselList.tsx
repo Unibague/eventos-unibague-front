@@ -11,7 +11,7 @@ const EventCarouselList = ({ eventFiles }: CarouselListProps) => {
   
   return (
     <>
-      <Carousel navButtonsAlwaysVisible={true}>
+      <Carousel navButtonsAlwaysInvisible={true}>
         {eventFiles.map((item, i) => (
           <EventCarouselItem eventFile={item} key={i}/>
         ))}

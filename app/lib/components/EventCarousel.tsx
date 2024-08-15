@@ -9,13 +9,13 @@ interface EventCarouselProps {
   eventId: number;
 }
 
-async function getEventFiles(eventId: number): Promise<EventFile[]> {
+async function getEventFiles(eventId: number): Promise<EventFile[] | null> {
     
     try {
       const http = HttpClient.getInstance();
       let response = await http.get(`/api/event/${eventId}/files`);
       let { data } = response;
-      const eventFiles = data.map((element) => {
+      const eventFiles = data.map((element: any) => {
         return convertSnakeToCamel(element);
       });
       return eventFiles as EventFile[];
@@ -29,7 +29,9 @@ async function getEventFiles(eventId: number): Promise<EventFile[]> {
 async function EventCarousel({ eventId }: EventCarouselProps) {
   const eventFiles = await getEventFiles(eventId);
   return (
-    <EventCarouselList eventFiles = {eventFiles}/>
+    <>
+        {eventFiles && <EventCarouselList eventFiles = {eventFiles}/> }  
+    </>
   );
 }
 

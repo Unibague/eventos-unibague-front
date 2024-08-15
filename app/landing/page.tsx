@@ -13,7 +13,7 @@ const EventsLandingPage = () => {
   
   const { data: session, status } = useSession();
   const [events, setEvents] = useState<Event[] | null>(null)
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
 
   useEffect(() => {
     async function getEvents() {

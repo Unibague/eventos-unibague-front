@@ -16,7 +16,7 @@ interface EventLayoutProps {
   }
 }
 
-async function getEvent(eventId: number): Promise<Event>  {
+async function getEvent(eventId: number): Promise<Event | null>  {
   try {
     const http = HttpClient.getInstance();
     let response = await http.get(`/api/events/${eventId}`);
@@ -73,7 +73,9 @@ export default async function EventLayout({ children, params }: EventLayoutProps
         {children}
       </Box>
 
-      <Footer event={event}/>
+      {event && <Footer event={event}/>}
+
+
     </Box>
   );
 }

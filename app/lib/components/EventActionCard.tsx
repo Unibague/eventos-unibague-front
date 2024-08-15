@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { Box, Paper, Typography } from '@mui/material';
 
-export const EventActionCard = ({icon, title}) => {
+export const EventActionCard = ({icon, title}: any) => {
   return (
     <>
     

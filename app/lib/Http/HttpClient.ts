@@ -9,7 +9,7 @@ export class HttpClient{
     private static instance: HttpClient;
     private httpAdapter: IHttpAdapter;
 
-    private constructor(token){
+    private constructor(token?: string){
         //Here we define what implementation we want to use. In this case I chose Axios
         this.httpAdapter = new AxiosAdapter(token)
     }
@@ -20,10 +20,10 @@ export class HttpClient{
         return HttpClient.instance;
     }
     
-    public setAuthToken(token: string){
-        sessionStorage.setItem('token', token)
-        this.httpAdapter = new AxiosAdapter(token);
-    }
+    // public setAuthToken(token: string){
+    //     sessionStorage.setItem('token', token)
+    //     this.httpAdapter = new AxiosAdapter(token);
+    // }
 
     public get(url: string, data?: any){
         return HttpClient.instance.httpAdapter.get(url)

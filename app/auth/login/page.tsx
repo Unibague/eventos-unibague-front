@@ -19,14 +19,13 @@ function LoginPage() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
   const eventId = searchParams.get('eventId');
   console.log(eventId, 'Id del evento que quiero enviar al back');
 
   const onSubmit = handleSubmit(async (data) => {
-
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
@@ -34,7 +33,7 @@ function LoginPage() {
       redirect: false,
     });
 
-    if (res.error) {
+    if (res?.error) {
       setError(res.error);
     } else {
       router.push(`/event/${eventId}/home`);
@@ -84,7 +83,7 @@ function LoginPage() {
             required: 'Email is required',
           })}
           error={!!errors.email}
-          helperText={errors.email?.message}
+          helperText={typeof errors.email?.message === 'string' ? errors.email.message : ''}
         />
 
         <TextField
@@ -98,7 +97,7 @@ function LoginPage() {
             required: 'Password is required',
           })}
           error={!!errors.password}
-          helperText={errors.password?.message}
+          helperText={typeof errors.password?.message === 'string' ? errors.password.message : ''}
         />
 
         <Button

@@ -22,12 +22,12 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: Agend
     // console.log(session);
 
     const [eventMeetings, setEventMeetings] = useState(initialEventMeetings);
-    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState<EventMeeting | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [currentDate, setCurrentDate] = useState(startOfDay(new Date()));
     const currentTime = new Date();
 
-    const handleEventClick = (event) => {
+    const handleEventClick = (event: EventMeeting) => {
         setSelectedEvent(event);
         setDialogOpen(true);
     };
@@ -57,7 +57,7 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: Agend
             try {
                 const http = HttpClient.getInstance();
                 const response = await http.get(`/api/event/${eventId}/meetings`);
-                const updatedEventMeetings = response.data.map(element => convertSnakeToCamel(element));
+                const updatedEventMeetings = response.data.map((element: any) => convertSnakeToCamel(element));
                 setEventMeetings(updatedEventMeetings);
                 console.log(updatedEventMeetings)
             } catch (error) {
