@@ -9,8 +9,8 @@ import GoogleProvider from "next-auth/providers/google";
 export const authOptions: NextAuthOptions = {
     providers: [
         GoogleProvider({
-          clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+          clientId: process.env.googleClientId ?? "",
+          clientSecret: process.env.googleClientSecret ?? "",
         }),
         CredentialsProvider({
           name: "Credentials",
@@ -55,12 +55,15 @@ export const authOptions: NextAuthOptions = {
           const http = HttpClient.getInstance();
           await http.get('sanctum/csrf-cookie');
           const resp = await http.post('api/auth/google', { user });
+          console.log(resp.data);
           return resp.data;
         },
         async jwt({ token, user, account }) {
+          console.log(user, 'userData');
           return { ...token, ...user };
         },
         async session({ session, token, user }) {
+          console.log(user, 'userData2');
           session.user = token as any;
           return session;
         },

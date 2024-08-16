@@ -15,8 +15,6 @@ const EventsLandingPage = () => {
   const { data: session, status } = useSession();
   const [events, setEvents] = useState<Event[] | null>(null);
   const [error, setError] = useState<any>(null);
-  // const [deferredPrompt, setDeferredPrompt] = useState<any>(null); // For handling the install prompt
-  // const [open, setOpen] = useState(false); // For controlling the Snackbar
 
   useEffect(() => {
     async function getEvents() {
@@ -116,7 +114,6 @@ const EventsLandingPage = () => {
           <Typography variant="h6" component="div">
             Todos los eventos
           </Typography>
-          <Button color="primary">Filtrar</Button>
         </Box>
 
         {events.length > 0 ? (

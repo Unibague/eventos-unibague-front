@@ -41,6 +41,20 @@ function LoginPage() {
     }
   });
 
+  const handleGoogleSignIn = async () => {
+    const res = await signIn('google' , { callbackUrl: 'http://localhost:3000/landing' });
+    if (res?.error) {
+      setError(res.error);
+    } else {
+
+        router.push(`/landing`);
+        return;
+
+      // router.push(`/event/${eventId}/home`);
+      // router.refresh();
+    }
+  };
+
   return (
     <Container
       sx={{
@@ -62,9 +76,11 @@ function LoginPage() {
           boxShadow: 1,
         }}
       >
-        <Alert color="warning">
+        {
+          eventId && <Alert color="warning">
           This is a restricted event, please sign in to continue.
         </Alert>
+        }
 
         {error && (
           <Alert severity="error" sx={{ marginY: 2, }}>
@@ -109,6 +125,18 @@ function LoginPage() {
         >
           Login
         </Button>
+
+
+        <Button
+          onClick={handleGoogleSignIn}
+          fullWidth
+          variant="outlined"
+          color="primary"
+          sx={{ marginTop: 2 }}
+        >
+          Unibagué Login
+        </Button>
+
       </Box>
     </Container>
   );

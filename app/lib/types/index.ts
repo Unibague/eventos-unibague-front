@@ -1,3 +1,17 @@
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  roles: Role[]
+}
+
+export interface Role{
+  id: string,
+  name:string,
+  customId: number,
+}
+
+
 export interface Event {
   id: string;
   name: string;

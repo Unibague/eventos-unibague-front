@@ -9,7 +9,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { useRouter } from 'next/navigation';
 
-
 interface AppBarProps {
   event: Event;
   eventLogo: EventFile;
@@ -18,33 +17,25 @@ interface AppBarProps {
 const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
   const { data: session } = useSession();
   const router = useRouter();
+  console.log(session, "fejjwejfj")
 
-  // console.log({session});
+  const handleHomeClick = () => {
+    router.push('/landing');
+  };
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/landing' });
+  };
 
   return (
     <Toolbar>
-      <IconButton onClick={() => router.push('/landing')}>
-        <HomeIcon sx={{ fontSize: '35px' , color:'secondary.main'}}/>
+      <IconButton onClick={handleHomeClick}>
+        <HomeIcon sx={{ fontSize: '35px', color: 'secondary.main' }} />
       </IconButton>
-
-      {/* <Typography variant="h6" noWrap color="#ffffff">
-        <Link href={`/event/${event.id}/home`}>
-          <Image
-            src={eventLogo.payload.source}
-            alt="Event Logo"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: '30%', height: 'auto', borderRadius: '15px' }}
-          />
-        </Link>
-      </Typography> */}
-
- 
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {session ? <h6>{session?.user.name}</h6> : null}
+      {session && <h6>{session.user.name}</h6>}
 
       <Link href={`/event/${event.id}/messages/view`} passHref>
         <IconButton color="secondary" sx={{ display: 'flex' }}>
@@ -54,17 +45,11 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
         </IconButton>
       </Link>
 
-      {session ? (
-        <>
-          <IconButton
-            onClick={() => signOut({ callbackUrl: '/landing' })}
-            color="secondary"
-            sx={{ display: 'flex' }}
-          >
-            <LogoutIcon sx={{ fontSize: '25px' }} />
-          </IconButton>
-        </>
-      ) : null}
+      {session && (
+        <IconButton onClick={handleSignOut} color="secondary" sx={{ display: 'flex' }}>
+          <LogoutIcon sx={{ fontSize: '25px' }} />
+        </IconButton>
+      )}
     </Toolbar>
   );
 };
