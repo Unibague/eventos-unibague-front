@@ -24,7 +24,6 @@ export default function LandingBar() {
 
   const router = useRouter();
   const session = useSession();
-  console.log(session);
 
   //TODO: Pendiente implementar el session para saber si hay usuario
 
@@ -58,7 +57,7 @@ export default function LandingBar() {
 
           {session.data ? (
             <>
-            <h6> {session.data?.user.name} </h6>
+            {/* <h6> {session.data?.user.name} </h6> */}
 
 
             <Tooltip title="Logout">

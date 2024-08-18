@@ -6,12 +6,13 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import {getServerSession} from 'next-auth'
+import { getServerSession } from 'next-auth'
 import SessionProvider from './lib/components/SessionProvider'
 import * as dotenv from 'dotenv'
 import type { Metadata } from "next";
-import PWAInstall from '@khmyznikov/pwa-install/react-legacy';
-import { PWAInstallElement } from '@khmyznikov/pwa-install';
+import { UserProvider } from "./context/userContext";
+import ProtectedRoutes from './lib/utils/ProtectedRoutes';
+
 dotenv.config();
 
 export const metadata: Metadata = {
@@ -30,8 +31,8 @@ export const metadata: Metadata = {
   viewport:
     "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
-    { rel: "unibague-touch-icon", url: "images/pwa-icons/icon-128x128.png" },
-    { rel: "icon", url: "images/pwa-icons/icon-128x128.png" },
+    { rel: "unibague-touch-icon", url: "/images/pwa-icons/icon-128x128.png" },
+    { rel: "icon", url: "/images/pwa-icons/icon-128x128.png" },
   ],
 };
 
@@ -50,12 +51,14 @@ export default async function RootLayout({
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <body>
           <AppRouterCacheProvider>
-            <SessionProvider session={session}>
-            <ThemeProvider theme={blueTheme}>
-            <CssBaseline />
-              {children}
-            </ThemeProvider>
-            </SessionProvider>
+            <UserProvider>
+              <SessionProvider session={session}>
+                <ThemeProvider theme={blueTheme}>
+                  <CssBaseline />
+                  <ProtectedRoutes>{children}</ProtectedRoutes>
+                </ThemeProvider>
+              </SessionProvider>
+            </UserProvider>
           </AppRouterCacheProvider>
         </body>
       </head>

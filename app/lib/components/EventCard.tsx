@@ -22,8 +22,6 @@ const EventCard = ({event}: EventCardProps) => {
   const router = useRouter();
   const [notificationOpen, setNotificationOpen] = React.useState(false);
 
-  console.log(session);
-
   const handleSelectedEvent = () =>{
 
     if(event.restrictedAccess == true){

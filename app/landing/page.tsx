@@ -9,12 +9,25 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import '@khmyznikov/pwa-install';
 import PWAInstallWrapper from '../lib/components/PWAInstallWrapper';
+import { useUser } from '../context/userContext';
 
 
 const EventsLandingPage = () => {
   const { data: session, status } = useSession();
   const [events, setEvents] = useState<Event[] | null>(null);
   const [error, setError] = useState<any>(null);
+  // console.log(session);
+
+  const {user, setUser}= useUser()
+
+  const updateUserInfo = () => {
+    setUser({ id: "123", name: "John Doe", email: "john.doe@example.com", 
+      roles:[{id: '1', name:'user', customId:5}] });
+  };
+
+
+
+
 
   useEffect(() => {
     async function getEvents() {
@@ -32,40 +45,8 @@ const EventsLandingPage = () => {
     }
 
     getEvents();
+      updateUserInfo();
   }, []);
-
-  // useEffect(() => {
-  //   const handler = (e: any) => {
-  //     e.preventDefault();
-  //     setDeferredPrompt(e);
-  //     setOpen(true);
-  //   };
-
-  //   window.addEventListener('beforeinstallprompt', handler);
-
-  //   return () => {
-  //     window.removeEventListener('beforeinstallprompt', handler);
-  //   };
-  // }, []);
-
-  // const handleInstallClick = () => {
-  //   if (deferredPrompt) {
-  //     deferredPrompt.prompt();
-  //     deferredPrompt.userChoice.then((choiceResult: any) => {
-  //       if (choiceResult.outcome === 'accepted') {
-  //         console.log('User accepted the install prompt');
-  //       } else {
-  //         console.log('User dismissed the install prompt');
-  //       }
-  //       setDeferredPrompt(null);
-  //     });
-  //   }
-  //   setOpen(false);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
 
   if (error) {
     return <div>Error loading events, please try again later</div>;
@@ -115,6 +96,7 @@ const EventsLandingPage = () => {
             Todos los eventos
           </Typography>
         </Box>
+
 
         {events.length > 0 ? (
           <EventList events={events} />

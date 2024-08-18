@@ -23,20 +23,19 @@ function LoginPage() {
 
   const searchParams = useSearchParams();
   const eventId = searchParams.get('eventId');
-  console.log(eventId, 'Id del evento que quiero enviar al back');
 
   const onSubmit = handleSubmit(async (data) => {
+
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
-      eventId,
       redirect: false,
     });
 
     if (res?.error) {
       setError(res.error);
     } else {
-      router.push(`/event/${eventId}/home`);
+      router.push(`/landing`);
       router.refresh();
     }
   });
@@ -76,11 +75,11 @@ function LoginPage() {
           boxShadow: 1,
         }}
       >
-        {
+        {/* {
           eventId && <Alert color="warning">
           This is a restricted event, please sign in to continue.
         </Alert>
-        }
+        } */}
 
         {error && (
           <Alert severity="error" sx={{ marginY: 2, }}>

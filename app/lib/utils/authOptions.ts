@@ -2,9 +2,8 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from 'zod';
 import { HttpClient } from '@/app/lib/Http/HttpClient';
-
-
 import GoogleProvider from "next-auth/providers/google";
+import { convertSnakeToCamel } from "./snakeToCamelCase";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -25,46 +24,58 @@ export const authOptions: NextAuthOptions = {
             }).safeParse(credentials);
             
             if (!parsedCredentials.success) {
-              throw new Error('Check your email and password');
+              throw new Error('Check your email and password syntax');
             }
-    
-            const { eventId } = req.body as { eventId: string };
+            //Credentials validated from Frontend by now
+            // const { eventId } = req.body as { eventId: string };
+
+            const userData = parsedCredentials.data
             const http = HttpClient.getInstance();
             await http.get('sanctum/csrf-cookie');
-            const data = { user: parsedCredentials.data, eventId };
-    
+            const data = { user: userData};
             try {
-              const resp = await http.post('api/auth/credentials', data);
+              const resp = await http.post('api/auth/credentials/validate', data);
               if (resp.data.status === 'error') {
                 throw new Error(resp.data.message);
               }
-              const userData = resp.data.data;
+
               return {
-                ...userData.user,
-                eventsAvailable: userData.events_available,
-                userEventsAdmin: userData.user_events_admin,
+                id: "",
+                email: resp.data.email,
+                eventsAvailable: resp.data.eventsAvailable
               };
+
+              // return {user: resp.data};
             } catch (e: any) {
-              throw new Error(e.response?.data?.message || "You don't have access to this event!");
+              throw new Error(e.response?.data?.message || "Unknown error");
             }
           },
         }),
       ],
+
+      session: {
+        maxAge: 3600 * 8,
+      },
+
       callbacks: {
-        async signIn({ user }) {
-          const http = HttpClient.getInstance();
-          await http.get('sanctum/csrf-cookie');
-          const resp = await http.post('api/auth/google', { user });
-          console.log(resp.data);
-          return resp.data;
+
+        async jwt({ token, user }) {
+          // If user object exists, store it in the token
+          return {...token, ...user};
         },
-        async jwt({ token, user, account }) {
-          console.log(user, 'userData');
-          return { ...token, ...user };
-        },
-        async session({ session, token, user }) {
-          console.log(user, 'userData2');
-          session.user = token as any;
+
+        async session({ session, token}) {
+          
+          session.user = {...token}
+          try {
+            if (session.user?.email) {
+              const http = HttpClient.getInstance();
+              const resp = await http.post('api/userInfo', {email:session.user?.email});
+              session.user = resp.data.user
+              }
+          } catch (error) {
+            console.error("Error fetching user roles:", error);
+          }
           return session;
         },
       },
