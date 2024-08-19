@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import '@khmyznikov/pwa-install';
 import PWAInstallWrapper from '../lib/components/PWAInstallWrapper';
 import { useUser } from '../context/userContext';
+import Footer from '../lib/components/Footer';
 
 
 const EventsLandingPage = () => {
@@ -24,9 +25,6 @@ const EventsLandingPage = () => {
     setUser({ id: "123", name: "John Doe", email: "john.doe@example.com", 
       roles:[{id: '1', name:'user', customId:5}] });
   };
-
-
-
 
 
   useEffect(() => {
@@ -106,6 +104,12 @@ const EventsLandingPage = () => {
       </Grid>
       
       <PWAInstallWrapper />
+
+      <Footer/>
+
+
+
+
 
     </>
   );

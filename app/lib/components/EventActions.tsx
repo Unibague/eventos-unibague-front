@@ -25,13 +25,13 @@ export const EventActions = ({eventId}: EventActionsProps) => {
   return (
     <>
     
-    <Box sx={
+    {/* <Box sx={
         {display:'flex', 
         justifyContent: 'space-around', 
         alignItems: 'flex-end',
         mb:'40px'
         }
-    }>
+    }> */}
 
     <Link href={`/event/${eventId}/agenda`} style={{textDecoration:'none', color: 'inherit'}}>
     <EventActionCard icon={<DateRangeRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Agenda'/>
@@ -42,14 +42,12 @@ export const EventActions = ({eventId}: EventActionsProps) => {
     </Link>
 
      {
-      userEventsAdmin.some((event: number)  => event == eventId) && 
+      userEventsAdmin && userEventsAdmin.some((event: number)  => event == eventId) && 
       <Link href={`/event/${eventId}/messages/add`} style={{textDecoration:'none', color: 'inherit'}}>
       <EventActionCard icon={<InsertCommentRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Message' />
       </Link>
-      
     } 
 
-    </Box>
 
     </>
   )

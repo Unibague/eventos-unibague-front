@@ -14,7 +14,7 @@ const WaveEffect = () => (
         position: 'relative',
         display: 'block',
         width: 'calc(100% + 1.3px)',
-        height: '30px',
+        height: '42px',
       },
       '& .shape-fill': {
         fill: '#ffffff',

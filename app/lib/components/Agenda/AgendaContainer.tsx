@@ -1,31 +1,46 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
-import { Paper, Typography, Box, Dialog, Button, IconButton } from '@mui/material';
+import { Paper, Typography, Box, IconButton } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { format, addDays, isSameDay, startOfDay } from 'date-fns';
+import { addDays, isSameDay, isWithinInterval } from 'date-fns';
 import EventDetails from '@/app/lib/components/Agenda/EventDetails';
 import { HttpClient } from '@/app/lib/Http/HttpClient';
 import { EventMeeting } from '@/app/lib/types';
 import { convertSnakeToCamel } from '../../utils';
-import { useSession } from "next-auth/react";
 
 interface AgendaContainerProps {
     eventMeetings: EventMeeting[];
     eventId: string;
+    startDate: string;
+    endDate: string;
 }
 
-const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: AgendaContainerProps) => {
-
-
-    const { data: session, status } = useSession();
-    // console.log(session);
-
+const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId, startDate, endDate }: AgendaContainerProps) => {
+    const [error, setError] = useState<any>(null);
     const [eventMeetings, setEventMeetings] = useState(initialEventMeetings);
     const [selectedEvent, setSelectedEvent] = useState<EventMeeting | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [currentDate, setCurrentDate] = useState(startOfDay(new Date()));
+
+    // Convert startDate and endDate strings to Date objects
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    const [currentDate, setCurrentDate] = useState(startDateObj);
     const currentTime = new Date();
+
+    const timeFormatter = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'utc',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+
+    const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'utc',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+    });
 
     const handleEventClick = (event: EventMeeting) => {
         setSelectedEvent(event);
@@ -37,15 +52,17 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: Agend
     };
 
     const handlePrevDay = () => {
-        setCurrentDate((prevDate) => addDays(prevDate, -1));
+        setCurrentDate((prevDate) => {
+            const newDate = addDays(prevDate, -1);
+            return isWithinInterval(newDate, { start: startDateObj, end: endDateObj }) ? newDate : prevDate;
+        });
     };
 
     const handleNextDay = () => {
-        setCurrentDate((prevDate) => addDays(prevDate, 1));
-    };
-
-    const handleTodayClick = () => {
-        setCurrentDate(startOfDay(new Date()));
+        setCurrentDate((prevDate) => {
+            const newDate = addDays(prevDate, 1);
+            return isWithinInterval(newDate, { start: startDateObj, end: endDateObj }) ? newDate : prevDate;
+        });
     };
 
     const eventsForDay = useMemo(() => {
@@ -59,37 +76,37 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: Agend
                 const response = await http.get(`/api/event/${eventId}/meetings`);
                 const updatedEventMeetings = response.data.map((element: any) => convertSnakeToCamel(element));
                 setEventMeetings(updatedEventMeetings);
-                console.log(updatedEventMeetings)
             } catch (error) {
                 console.error('Failed to fetch event meetings:', error);
+                setError(error);
             }
         };
 
-        // Fetch data every 15 seconds
-        const interval = setInterval(fetchEventMeetings, 15000); // 15000 ms = 15 seconds
+        const interval = setInterval(fetchEventMeetings, 15000);
 
         return () => clearInterval(interval);
     }, [eventId]);
 
+    if (error) {
+        return <div>Error loading event info.</div>;
+    }
+
     return (
         <Paper sx={{ p: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <IconButton onClick={handlePrevDay}>
+                <IconButton onClick={handlePrevDay} disabled={isSameDay(currentDate, startDateObj)}>
                     <ArrowBackIosIcon />
                 </IconButton>
-                <Typography variant="h5">{format(currentDate, 'MMMM d, yyyy')}</Typography>
-                <IconButton onClick={handleNextDay}>
+                <Typography variant="h5">{dateFormatter.format(currentDate)}</Typography>
+                <IconButton onClick={handleNextDay} disabled={isSameDay(currentDate, endDateObj)}>
                     <ArrowForwardIosIcon />
                 </IconButton>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <Button variant="outlined" onClick={handleTodayClick}>
-                    Today
-                </Button>
-            </Box>
             {eventsForDay.length > 0 ? (
                 eventsForDay.map((event, index) => {
-                    const isCurrentEvent = currentTime >= new Date(event.startDate) && currentTime <= new Date(event.endDate);
+                    const eventStart = new Date(event.startDate);
+                    const eventEnd = new Date(event.endDate);
+                    const isCurrentEvent = currentTime >= eventStart && currentTime <= eventEnd;
                     return (
                         <Box
                             key={index}
@@ -107,12 +124,13 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId }: Agend
                             }}
                             onClick={() => handleEventClick(event)}
                         >
-                            <Typography variant="body2" color="textSecondary">
-                                {format(event.startDate, 'HH:mm')} - {format(event.endDate, 'HH:mm')}
+                            <Typography variant="h6" fontSize={21}>{event.name}</Typography>
+                            <Typography variant="subtitle1">{event.speaker}</Typography>
+                            <Typography variant="subtitle2" color="textSecondary">
+                                {timeFormatter.format(eventStart)} - {timeFormatter.format(eventEnd)}
                             </Typography>
-                            <Typography variant="h6">{event.name}</Typography>
-                            <Typography variant="body1" color="textSecondary">
-                                Location: {event.location || 'N/A'}
+                            <Typography variant="subtitle2" color="textSecondary">
+                                {event.location || 'N/A'}
                             </Typography>
                         </Box>
                     );

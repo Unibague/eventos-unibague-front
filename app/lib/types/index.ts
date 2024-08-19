@@ -44,6 +44,7 @@ export interface EventMeeting {
   id: string;
   name: string;
   description:string,
+  speaker: string,
   location: string,
   startDate: string,
   endDate: string,

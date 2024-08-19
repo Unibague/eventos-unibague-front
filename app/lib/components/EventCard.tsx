@@ -11,6 +11,8 @@ import { useRouter, usePathname,} from 'next/navigation';
 import { useSession } from "next-auth/react";
 import {userCanAccessEvent} from '@/app/lib/utils/index'
 import Notification from './Notification';
+import { format, parseISO, isSameYear } from "date-fns";
+
 
 interface EventCardProps {
   event: Event;
@@ -21,6 +23,17 @@ const EventCard = ({event}: EventCardProps) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [notificationOpen, setNotificationOpen] = React.useState(false);
+
+  const formatDateRange = (startDateString: string, endDateString: string) => {
+    const startDate = parseISO(startDateString);
+    const endDate = parseISO(endDateString);
+
+    // Format the dates as dd/MM/yyyy
+    const startDateFormatted = format(startDate, 'dd/MM/yy');
+    const endDateFormatted = format(endDate, 'dd/MM/yy');
+
+    return `${startDateFormatted} - ${endDateFormatted}`;
+  };
 
   const handleSelectedEvent = () =>{
 
@@ -38,7 +51,7 @@ const EventCard = ({event}: EventCardProps) => {
         }
       }
       else{
-          router.push( `/auth/login?eventId=${event.id}`);
+          router.push( `/auth/login`);
       }
     }
     else{
@@ -52,11 +65,10 @@ const EventCard = ({event}: EventCardProps) => {
 
   return (
     <>
-    <Card sx={{ maxWidth: 345, mb:'15px' }}>
+    <Card sx={{mb:'15px' }}>
       <CardActionArea onClick={handleSelectedEvent}>
         <CardMedia
           component="img"
-          height="140"
           image={event.cardImageUrl}
           alt={event.name}
         />
@@ -66,7 +78,7 @@ const EventCard = ({event}: EventCardProps) => {
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {event.location} <br/>
-            {event.startDate} - {event.endDate}
+            {formatDateRange(event.startDate,event.endDate)}
           </Typography>
         </CardContent>
       </CardActionArea>

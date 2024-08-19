@@ -17,7 +17,6 @@ interface AppBarProps {
 const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
   const { data: session } = useSession();
   const router = useRouter();
-  console.log(session, "fejjwejfj")
 
   const handleHomeClick = () => {
     router.push('/landing');
@@ -29,9 +28,31 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
 
   return (
     <Toolbar>
-      <IconButton onClick={handleHomeClick}>
-        <HomeIcon sx={{ fontSize: '35px', color: 'secondary.main' }} />
+      <IconButton onClick={handleHomeClick} sx={{ marginRight: 1, padding: 0 }}>
+        <HomeIcon sx={{ fontSize: '30px', color: 'secondary.main' }} />
       </IconButton>
+
+      <Link href={`/event/${event.id}/home`} passHref>
+        <IconButton sx={{ padding: 0 }}>
+          <Box
+            sx={{
+              position: 'relative',
+              width: 85, // Adjust size as needed
+              height: 85,
+              marginRight: 1, // Reduce margin right for better space utilization
+            }}
+          >
+            <Image
+              src={eventLogo.payload.source}
+              alt={event.name}
+              fill
+              style={{ objectFit: 'contain' }}
+              sizes="(max-width: 600px) 50px, 50px" // Define sizes for different viewports
+            />
+          </Box>
+        </IconButton>
+      </Link>
+
 
       <Box sx={{ flexGrow: 1 }} />
 
