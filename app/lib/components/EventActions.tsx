@@ -19,7 +19,8 @@ export const EventActions = ({eventId}: EventActionsProps) => {
   const { data: session, status } = useSession();
 
   const user = session?.user;
-  const userEventsAdmin = user.userEventsAdmin;
+
+  const userEventsAdmin = user?.userEventsAdmin;
 
 
   return (
@@ -37,7 +38,7 @@ export const EventActions = ({eventId}: EventActionsProps) => {
     <EventActionCard icon={<DateRangeRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Agenda'/>
     </Link>
 
-    <Link href={`mailto:wosc.org@gmail.com?subject=Event%20Contact&body=Hello,%20I%20have%20a%20question%20about%20the%20event`}  style={{textDecoration:'none', color: 'inherit'}}>
+    <Link href={`mailto:wosc.world@gmail.com?subject=Event%20Contact&body=Hello,%20I%20have%20a%20question%20about%20the%20event`}  style={{textDecoration:'none', color: 'inherit'}}>
     <EventActionCard icon={<MailOutlineRoundedIcon color='primary' sx={{ fontSize: '60px'}} />} title='Contact'/>
     </Link>
 
