@@ -126,7 +126,7 @@ function LoginPage() {
         </Button>
 
 
-        <Button
+        {/* <Button
           onClick={handleGoogleSignIn}
           fullWidth
           variant="outlined"
@@ -134,7 +134,7 @@ function LoginPage() {
           sx={{ marginTop: 2 }}
         >
           Unibagué Login
-        </Button>
+        </Button> */}
 
       </Box>
     </Container>

@@ -56,7 +56,7 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {session && <h6>{session.user.name}</h6>}
+      {session && <Typography fontSize={16} fontWeight='bold'>{session.user.name}</Typography>}
 
       <Link href={`/event/${event.id}/messages/view`} passHref>
         <IconButton color="secondary" sx={{ display: 'flex' }}>

@@ -34,6 +34,11 @@ export class HttpClient{
         return HttpClient.instance.httpAdapter.post(url,data)
     }
 
+    public put(url: string, data: any){
+        return HttpClient.instance.httpAdapter.put(url,data)
+    }
+
+
     // public static get2FADataFromCookies(){
     //     const cookieStore = cookies();
     //     const setupSecretKey = cookieStore.get("setup_secret_key");

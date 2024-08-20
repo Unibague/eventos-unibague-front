@@ -68,6 +68,7 @@ const EventCard = ({event}: EventCardProps) => {
     <Card sx={{mb:'15px' }}>
       <CardActionArea onClick={handleSelectedEvent}>
         <CardMedia
+        sx={{maxHeight:'500px'}}
           component="img"
           image={event.cardImageUrl}
           alt={event.name}

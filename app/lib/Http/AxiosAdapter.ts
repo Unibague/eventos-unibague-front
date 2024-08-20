@@ -42,6 +42,11 @@ export class AxiosAdapter implements IHttpAdapter{
         return response;
     }  
 
+    public async put(url: string, data: any): Promise<any>{
+        const response = await this.axiosInstance.put(url, data);
+        return response;
+    }  
+
     public changeDefaultRoute (baseURL: string){
         this.axiosInstance.defaults.baseURL = baseURL
     }
