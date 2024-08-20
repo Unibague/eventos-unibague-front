@@ -61,7 +61,7 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
       <Link href={`/event/${event.id}/messages/view`} passHref>
         <IconButton color="secondary" sx={{ display: 'flex' }}>
           <Badge color="error" variant="dot" invisible={false}>
-            <NotificationsIcon sx={{ fontSize: '28px' }} />
+            <NotificationsIcon sx={{ fontSize: '28px' }} /> 
           </Badge>
         </IconButton>
       </Link>

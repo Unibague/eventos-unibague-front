@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import '@khmyznikov/pwa-install';
 import PWAInstallWrapper from '../lib/components/PWAInstallWrapper';
-import { useUser } from '../context/userContext';
 import Footer from '../lib/components/Footer';
 
 
@@ -18,14 +17,6 @@ const EventsLandingPage = () => {
   const [events, setEvents] = useState<Event[] | null>(null);
   const [error, setError] = useState<any>(null);
   // console.log(session);
-
-  const {user, setUser}= useUser()
-
-  const updateUserInfo = () => {
-    setUser({ id: "123", name: "John Doe", email: "john.doe@example.com", 
-      roles:[{id: '1', name:'user', customId:5}] });
-  };
-
 
   useEffect(() => {
     async function getEvents() {
@@ -43,7 +34,6 @@ const EventsLandingPage = () => {
     }
 
     getEvents();
-      updateUserInfo();
   }, []);
 
   if (error) {

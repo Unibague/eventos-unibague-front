@@ -1,99 +1,125 @@
-  'use client'
-  import { Card, Typography, TextField, Box, Button, Snackbar } from '@mui/material';
-  import React, { useState } from 'react';
-  import { HttpClient } from '../../Http/HttpClient';
-  import { useEffect } from 'react'
-  import { useParams } from 'next/navigation'
-  import {prepareErrorText} from '../../utils/index'
+'use client';
+import { Card, Typography, TextField, Box, Button, Snackbar } from '@mui/material';
+import React, { useState } from 'react';
+import { HttpClient } from '../../Http/HttpClient';
+import { useParams } from 'next/navigation';
+import { prepareErrorText } from '../../utils/index';
 
-  const AddMessageCard = () => {
+const AddMessageCard = () => {
+  const params = useParams();
+  const { id: eventId } = params;
+  const [message, setMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarColor, setSnackbarColor] = useState('success.main');
+  const [loading, setLoading] = useState(false); // Track loading state
 
-    const params = useParams()
-    const {id: eventId} = params;
-    const [message, setMessage] = useState('');
-    const [openSnackbar, setOpenSnackbar] = useState(false)
-    const [snackbarMessage, setSnackbarMessage] = useState("")
-    const [snackbarColor, setSnackbarColor] = useState('secondary.main')
+  async function handleMessageSubmitted() {
 
-    async function handleMessageSubmitted () {
-
-      const http = HttpClient.getInstance();
-      const data = {message};
-
-      try {
-        const resp = await http.post(`api/event/${eventId}/messages`, data)
-        console.log(resp.data);
-        setSnackbarMessage('Mensaje añadido correctamente')
-        setSnackbarColor("secondary.main")
-        setOpenSnackbar(true);
-      } catch (e) {
-        console.log('here')
-        {/* Here I would need to generate another snackbar, but with a different message. The open and onClose properties remain the same*/}
-        setSnackbarMessage(prepareErrorText(e))
-        setSnackbarColor("error.main")
-        setOpenSnackbar(true);
-      }
-
+    if (message.trim() === '') {
+      setSnackbarMessage('Message cannot be empty.');
+      setSnackbarColor('error.main');
+      setOpenSnackbar(true);
+      return;
     }
 
-    return (
-      <>
-        <Box
-          sx={{
-            display: 'flex',
-            padding: '15px',
-            m: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <Card sx={{ padding: '15px' }}>
-            <Typography variant="h6">Add a Message</Typography>
-            <Typography >
-              Please write the message you want to send, everyone who is in the app
-              will be able to see it.
-            </Typography>
-            <TextField
-              multiline
-              rows={4}
-              placeholder="Let's meet on the hallway..."
-              sx={{ my: '15px' }}
-              onChange = {(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setMessage(e.target.value)
-              }}
-            />
+    setLoading(true); // Start loading
 
-            <Box textAlign={'end'}>
-            <Button variant='contained' sx={{justifyContent:'flex-end'}} onClick={() => handleMessageSubmitted()}> Send </Button>  
-            </Box>
-          </Card>
 
-          <Snackbar
+    const http = HttpClient.getInstance();
+    const data = { message };
+
+    try {
+      const resp = await http.post(`api/event/${eventId}/messages`, data);
+      console.log(resp.data);
+      setSnackbarMessage('Message added successfully!');
+      setSnackbarColor('success.main');
+      setOpenSnackbar(true);
+      setMessage(''); // Clear the message input after successful submission
+    } catch (e) {
+      console.log('Error:', e);
+      setSnackbarMessage(prepareErrorText(e));
+      setSnackbarColor('error.main');
+      setOpenSnackbar(true);
+    } finally {
+      setLoading(false); // End loading
+    }
+
+  }
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center', // Center horizontally
+          padding: '20px',
+          m: '20px',
+        }}
+      >
+        <Card sx={{ width: '100%', maxWidth: '800px', padding: '20px', boxShadow: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            Add a Message
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            Share your message with everyone in the event.
+          </Typography>
+          <TextField
+            multiline
+            rows={4}
+            placeholder="Write your message here..."
+            sx={{
+              width: '100%',
+              mb: 2,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '10px',
+                bgcolor: 'background.paper',
+              },
+              '& .MuiInputBase-input': {
+                padding: '10px',
+              },
+            }}
+            value={message}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setMessage(e.target.value);
+            }}
+          />
+          <Box textAlign="end">
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ borderRadius: '20px', padding: '10px 20px' }}
+              onClick={() => handleMessageSubmitted()}
+              disabled={loading} // Disable button while loading
+            >
+              {loading ? 'Sending...' : 'Send'}
+            </Button>
+          </Box>
+        </Card>
+
+        <Snackbar
           open={openSnackbar}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           autoHideDuration={3000}
           onClose={() => setOpenSnackbar(false)}
           message={snackbarMessage}
           ContentProps={{
-            sx:{
-              border: "1px solid black",
-              borderRadius: "30px",
+            sx: {
+              borderRadius: '10px',
               color: 'white',
               bgcolor: snackbarColor,
-              fontWeight: "bold",
-              textAlign: "center",
-              // centering our message
-              width:"100%",
-              "& .MuiSnackbarContent-message":{
-                width:"inherit",
-                textAlign: "center"
-              }
-            }
-        }}
+              fontWeight: 'bold',
+              textAlign: 'center',
+              '& .MuiSnackbarContent-message': {
+                width: '100%',
+                textAlign: 'center',
+              },
+            },
+          }}
         />
+      </Box>
+    </>
+  );
+};
 
-        </Box>
-      </>
-    );
-  };
-
-  export default AddMessageCard;
+export default AddMessageCard;

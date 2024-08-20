@@ -1,27 +1,12 @@
 import { EventMessage } from '@/app/lib/types';
 import { Typography } from '@mui/material';
-import { cookies } from 'next/headers'
-import { decode } from 'next-auth/jwt';
-import { HttpClient } from '../../Http/HttpClient';
 
 interface MessageProps {
   message: EventMessage;
 }
 
 const Message = async ({ message }: MessageProps) => {
-  // const cookieStore = cookies();
-  // const sessionToken = cookieStore.get('next-auth.session-token')?.value;
-  // // console.log(sessionToken);
 
-  // const decoded = await decode({
-  //   token: sessionToken,
-  //   secret: process.env.NEXTAUTH_SECRET ?? "",
-  // })
-
-  // console.log(decoded);
-
-  // const http = HttpClient.getInstance();
-  // const resp = await http.get('api/check-auth');
 
   // Function to format the date as "day/month - hour:minutes"
   const formatDate = (dateString: string) => {
@@ -29,6 +14,7 @@ const Message = async ({ message }: MessageProps) => {
     const options: Intl.DateTimeFormatOptions = {
       day: '2-digit',
       month: '2-digit',
+      year:'2-digit',
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
@@ -67,7 +53,6 @@ const Message = async ({ message }: MessageProps) => {
           {formattedDate}
         </div>
         <Typography fontSize={14} fontWeight={'light'}> {message.content} </Typography>
-        {/* <p style={{ margin: 0 }}>{message.content}</p> */}
         <div
           style={{
             content: '""',

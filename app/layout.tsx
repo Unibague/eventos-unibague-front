@@ -51,14 +51,12 @@ export default async function RootLayout({
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <body>
           <AppRouterCacheProvider>
-            <UserProvider>
               <SessionProvider session={session}>
                 <ThemeProvider theme={blueTheme}>
                   <CssBaseline />
                   <ProtectedRoutes>{children}</ProtectedRoutes>
                 </ThemeProvider>
               </SessionProvider>
-            </UserProvider>
           </AppRouterCacheProvider>
         </body>
       </head>

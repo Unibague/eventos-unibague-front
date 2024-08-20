@@ -127,7 +127,7 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId, startDa
                             <Typography variant="h6" fontSize={21}>{event.name}</Typography>
                             <Typography variant="subtitle1">{event.speaker}</Typography>
                             <Typography variant="subtitle2" color="textSecondary">
-                                {timeFormatter.format(eventStart)} - {timeFormatter.format(eventEnd)}
+                                {timeFormatter.format(eventStart)} - {timeFormatter.format(eventEnd)} GMT
                             </Typography>
                             <Typography variant="subtitle2" color="textSecondary">
                                 {event.location || 'N/A'}

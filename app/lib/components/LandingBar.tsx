@@ -16,6 +16,9 @@ export default function LandingBar() {
   const router = useRouter();
   const session = useSession();
 
+  console.log(session);
+
+
   const onClickSignIn = () => {
     router.push(`/auth/login`);
   };
@@ -28,7 +31,7 @@ export default function LandingBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Box sx={{ display: 'flex', alignItems: 'center', py:0.8 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', py: 0.8 }}>
             <Box
               component="img"
               src="/images/pwa-icons/icon-384x384.png"
@@ -47,20 +50,28 @@ export default function LandingBar() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {session.data ? (
+          {session.data?.user ? (
+            <>
+            <Typography variant="h6" fontSize={15} sx={{ color: 'white' }}>
+            {session.data.user.name}
+            </Typography>
+
             <Tooltip title="Logout">
               <IconButton size="large" onClick={onClickSignout}>
                 <LogoutIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
+            </>
           ) : (
             <Tooltip title="Login">
               <IconButton size="large" onClick={onClickSignIn}>
                 <LoginIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
+            
           )}
         </Toolbar>
+        
       </AppBar>
     </Box>
   );
