@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { HttpClient } from '../../Http/HttpClient';
 import { useParams } from 'next/navigation';
 import { prepareErrorText } from '../../utils/index';
+import { signIn, signOut, useSession } from 'next-auth/react';
+
 
 const AddMessageCard = () => {
   const params = useParams();
@@ -13,6 +15,8 @@ const AddMessageCard = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarColor, setSnackbarColor] = useState('success.main');
   const [loading, setLoading] = useState(false); // Track loading state
+  const { data: session } = useSession();
+
 
   async function handleMessageSubmitted() {
 
@@ -27,7 +31,7 @@ const AddMessageCard = () => {
 
 
     const http = HttpClient.getInstance();
-    const data = { message };
+    const data = { message, userId: session?.user?.id};
 
     try {
       const resp = await http.post(`api/event/${eventId}/messages`, data);
