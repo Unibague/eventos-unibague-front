@@ -3,12 +3,12 @@
 
 import React from 'react';
 import { Container } from '@mui/material';
-// import EventUserAssignment from '@/app/lib/components/EventUserAssignment';
+import EventUserAssignment from '@/app/lib/components/EventUserAssignment';
 
 const ManageEventAccessPage = () => {
   return (
     <Container>
-      {/* <EventUserAssignment /> */}
+      <EventUserAssignment />
     </Container>
   );
 };

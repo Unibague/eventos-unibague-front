@@ -21,8 +21,8 @@ export class AxiosAdapter implements IHttpAdapter{
         this.axiosInstance = axios.create(config)
     }
 
-    public async get(url: string): Promise<any> {
-        const response = await this.axiosInstance.get(url);
+    public async get(url: string, params?:any): Promise<any> {
+        const response = await this.axiosInstance.get(url, params);
         return response;
         //    let axiosError: AxiosError | null = null;
         // try {

@@ -25,8 +25,8 @@ export class HttpClient{
     //     this.httpAdapter = new AxiosAdapter(token);
     // }
 
-    public get(url: string, data?: any){
-        return HttpClient.instance.httpAdapter.get(url)
+    public get(url: string, params?: any){
+        return HttpClient.instance.httpAdapter.get(url, params)
     }
 
 

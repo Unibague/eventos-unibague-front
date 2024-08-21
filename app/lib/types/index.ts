@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   unreadMessages: boolean;
-  roles: Role[]
+  roles: Role[];
 }
 
 export interface Role{
@@ -21,6 +21,8 @@ export interface Event {
   location: string;
   restrictedAccess: boolean;
   cardImageUrl: string;
+  users: User[] | [];
+  admins: User[] | [];
 }
 
 export interface EventMessage {

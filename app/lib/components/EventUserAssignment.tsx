@@ -1,198 +1,233 @@
-// // app/components/EventUserAssignment.tsx
-// 'use client'
+// app/components/EventUserAssignment.tsx
+'use client';
 
-// import React, { useState, useEffect } from 'react';
-// import {
-//   Box,
-//   Typography,
-//   List,
-//   ListItem,
-//   ListItemText,
-//   Chip,
-//   Button,
-//   Dialog,
-//   DialogTitle,
-//   DialogContent,
-//   DialogActions,
-//   Select,
-//   MenuItem,
-//   SelectChangeEvent,
-//   FormControl,
-//   InputLabel,
-//   Paper,
-// } from '@mui/material';
-// import { Event, User } from '@/app/lib/types';
-// import { HttpClient } from '@/app/lib/Http/HttpClient';
-// import { convertSnakeToCamel } from '@/app/lib/utils';
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Grid,
+  Typography,
+  List,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  CircularProgress,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Event, User } from '@/app/lib/types';
+import { HttpClient } from '@/app/lib/Http/HttpClient';
+import { convertSnakeToCamel } from '@/app/lib/utils';
+import Notification from '@/app/lib/components/Notification';
+import { prepareErrorText } from '@/app/lib/utils/index';
 
-// // Dummy data
-// const dummyEvents: Event[] = [
-//   { id: 1, name: 'Annual Conference 2024' },
-//   { id: 2, name: 'Product Launch Webinar' },
-//   { id: 3, name: 'Team Building Workshop' },
-// ];
+const EventUserAssignment: React.FC = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const [admins, setAdmins] = useState<User[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationType, setNotificationType] = useState<'success' | 'error'>(
+    'success',
+  );
+  const [isSending, setIsSending] = useState(false);
 
-// const dummyUsers: User[] = [
-//   { id: 1, name: 'Alice Johnson', email: 'alice@example.com' },
-//   { id: 2, name: 'Bob Smith', email: 'bob@example.com' },
-//   { id: 3, name: 'Charlie Brown', email: 'charlie@example.com' },
-//   { id: 4, name: 'Diana Ross', email: 'diana@example.com' },
-//   { id: 5, name: 'Ethan Hunt', email: 'ethan@example.com' },
-// ];
+  async function getEvents() {
+    try {
+      const http = HttpClient.getInstance();
+      let response = await http.get('/api/events/', {
+        params: { restrictedAccess: true },
+      });
+      let events = response.data.map((element: any) => {
+        return convertSnakeToCamel(element);
+      });
+      setEvents(events as Event[]);
+      console.log(events);
+    } catch (error) {
+      console.error('Failed to fetch events:', error);
+    }
+  }
 
-// const EventUserAssignment: React.FC = () => {
-//   const [events, setEvents] = useState<Event[]>([]);
-//   const [users, setUsers] = useState<User[]>([]);
-//   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-//   const [assignedUsers, setAssignedUsers] = useState<{ [key: number]: number[] }>({});
-//   const [dialogOpen, setDialogOpen] = useState(false);
-//   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  async function getUsers() {
+    try {
+      const http = HttpClient.getInstance();
+      let response = await http.get('/api/users');
+      const users = response.data.map((element: any) => {
+        return convertSnakeToCamel(element);
+      });
+      setUsers(users as User[]);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    }
+  }
 
-//   useEffect(() => {
+  useEffect(() => {
+    getEvents();
+    getUsers();
+  }, []);
 
-//     async function getRestrictedAccessEvents() {
-//         try {
-//           const http = HttpClient.getInstance();
-//           let response = await http.get('/api/events/restricted');
-//           const events = response.data.map((element: any) => {
-//             return convertSnakeToCamel(element);
-//           });
-//           setEvents(events as Event[]);
-//         } catch (error) {
-//           console.error('Failed to fetch events:', error);
-//         }
-//       }
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event);
+    setSelectedUsers(event.users || []);
+    setAdmins(event.admins || []);
+  };
 
-//     // In a real scenario, you'd fetch this data from your API
-//     setEvents(dummyEvents);
-//     setUsers(dummyUsers);
-//     // Initialize with some dummy assignments
-//     setAssignedUsers({
-//       1: [1, 2],
-//       2: [3, 4],
-//       3: [5],
-//     });
+  const handleUserSelect = (user: User, isAdmin: boolean) => {
+    if (selectedEvent) {
+        if (isAdmin) {
+            setAdmins((prev) =>
+              prev.some((u) => u.id === user.id)
+                ? prev.filter((u) => u.id !== user.id)
+                : [...prev, user],
+            );
+          } else {
+            setSelectedUsers((prev) =>
+              prev.some((u) => u.id === user.id)
+                ? prev.filter((u) => u.id !== user.id)
+                : [...prev, user],
+            );
+          }
+    }
+  };
 
-//     getRestrictedAccessEvents();
+  const handleSaveAssignments = async () => {
+    if (selectedEvent) {
+      setIsSending(true);
 
-//   }, []);
+      try {
+        console.log(selectedUsers, selectedEvent);
+        const http = HttpClient.getInstance();
+        const resp = await http.post(
+          `api/event/${selectedEvent.id}/users/assign`,
+          { users: selectedUsers, admins },
+        );
+        setNotificationMessage(resp.data.message);
+        setNotificationOpen(true);
+        // Re-fetch events and users after saving
+        await getEvents();
 
-//   const handleEventClick = (event: Event) => {
-//     setSelectedEvent(event);
-//     setDialogOpen(true);
-//   };
+        // Re-fetch the updated event data, including the users
+        const updatedEvent = {
+          ...selectedEvent,
+          users: selectedUsers, // Keep the current selected users in the event
+          admins: admins  
+        };
 
-//   const handleClose = () => {
-//     setDialogOpen(false);
-//     setSelectedEvent(null);
-//     setSelectedUsers([]);
-//   };
+        setSelectedEvent(updatedEvent); // Update the selected event with the current users
+      } catch (error: any) {
+        setNotificationMessage(prepareErrorText(error));
+        setNotificationOpen(true);
+      }
+    }
+    setIsSending(false);
+  };
 
-//   const handleUserSelect = (event: SelectChangeEvent<number[]>) => {
-//     setSelectedUsers(event.target.value as number[]);
-//   };
+  return (
+    <>
+      <Box
+        sx={{
+          maxWidth: 900,
+          margin: 'auto',
+          mt: 4,
+          p: 2,
+          boxShadow: 3,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h4" gutterBottom align="center">
+          Event User Assignment
+        </Typography>
 
-//   const handleAssignUsers = () => {
-//     if (selectedEvent) {
-//       setAssignedUsers(prev => ({
-//         ...prev,
-//         [selectedEvent.id]: [...(prev[selectedEvent.id] || []), ...selectedUsers]
-//       }));
-//       handleClose();
-//     }
-//   };
+        <List>
+          {events.map((event) => (
+            <Accordion key={event.id} onChange={() => handleEventClick(event)}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>{event.name}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <Typography variant="h6" gutterBottom>
+                      Allowed Assistants
+                    </Typography>
+                    <FormControl component="fieldset" variant="standard">
+                      <FormGroup>
+                        {users.map((user) => (
+                          <FormControlLabel
+                            key={user.id}
+                            control={
+                              <Checkbox
+                                checked={selectedUsers.some(
+                                  (u) => u.id === user.id,
+                                )}
+                                onChange={() => handleUserSelect(user)}
+                              />
+                            }
+                            label={user.name}
+                          />
+                        ))}
+                      </FormGroup>
+                    </FormControl>
+                  </Grid>
 
-//   const handleRemoveUser = (eventId: number, userId: number) => {
-//     setAssignedUsers(prev => ({
-//       ...prev,
-//       [eventId]: prev[eventId].filter(id => id !== userId)
-//     }));
-//   };
+                  <Grid item xs={6}>
+                    <Typography variant="h6" gutterBottom>
+                      Event Admins
+                    </Typography>
 
-//   return (
-//     <Box sx={{ maxWidth: 600, margin: 'auto', mt: 4 }}>
-//     <Typography variant="h4" gutterBottom>
-//       Event User Assignment
-//     </Typography>
-//     <List>
-//       {events.map((event) => (
-//         <Paper key={event.id} elevation={3} sx={{ mb: 2, p: 2 }}>
-//           <ListItem
-//             secondaryAction={
-//               <Button
-//                 variant="outlined"
-//                 color="primary"
-//                 onClick={() => handleEventClick(event)}
-//               >
-//                 Manage Access
-//               </Button>
-//             }
-//           >
-//             <ListItemText
-//               primary={event.name}
-//               secondary={
-//                 <React.Fragment>
-//                   <Typography component="span" variant="body2" color="text.primary">
-//                     Assigned Users:
-//                   </Typography>
-//                   <Box sx={{ mt: 1 }}>
-//                     {assignedUsers[event.id]?.map(userId => {
-//                       const user = users.find(u => u.id === userId);
-//                       return user ? (
-//                         <Chip
-//                           key={user.id}
-//                           label={user.name}
-//                           onDelete={() => handleRemoveUser(event.id, user.id)}
-//                           sx={{ mr: 1, mb: 1 }}
-//                         />
-//                       ) : null;
-//                     })}
-//                   </Box>
-//                 </React.Fragment>
-//               }
-//             />
-//           </ListItem>
-//         </Paper>
-//       ))}
-//     </List>
+                    <FormControl component="fieldset" variant="standard">
+                      <FormGroup>
+                        {users.map((user) => (
+                          <FormControlLabel
+                            key={user.id}
+                            control={
+                              <Checkbox
+                                checked={admins.some((u) => u.id === user.id)}
+                                onChange={() => handleUserSelect(user, true)}
+                              />
+                            }
+                            label={user.name}
+                          />
+                        ))}
+                      </FormGroup>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                <Box textAlign='right'>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSaveAssignments}
+                  disabled={isSending}
+                  sx={{ mt: 3 }}
+                >
+                  {isSending ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    'Save Assignments'
+                  )}
+                </Button>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </List>
+      </Box>
 
-//       <Dialog open={dialogOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-//         <DialogTitle>Assign Users to {selectedEvent?.name}</DialogTitle>
-//         <DialogContent>
-//           <FormControl fullWidth sx={{ mt: 2 }}>
-//             <InputLabel id="user-select-label">Select Users</InputLabel>
-//             <Select
-//               labelId="user-select-label"
-//               multiple
-//               value={selectedUsers}
-//               onChange={handleUserSelect}
-//               renderValue={(selected) => (
-//                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-//                   {selected.map((value) => (
-//                     <Chip key={value} label={users.find(u => u.id === value)?.name} />
-//                   ))}
-//                 </Box>
-//               )}
-//             >
-//               {users
-//                 .filter(user => !assignedUsers[selectedEvent?.id || 0]?.includes(user.id))
-//                 .map((user) => (
-//                   <MenuItem key={user.id} value={user.id}>
-//                     {user.name}
-//                   </MenuItem>
-//                 ))}
-//             </Select>
-//           </FormControl>
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={handleClose}>Cancel</Button>
-//           <Button onClick={handleAssignUsers} variant="contained" color="primary">
-//             Assign Users
-//           </Button>
-//         </DialogActions>
-//       </Dialog>
-//     </Box>
-//   );
-// };
+      <Notification
+        message={notificationMessage}
+        open={notificationOpen}
+        onClose={() => setNotificationOpen(false)}
+        snackbarColor={notificationType === 'error' ? 'error' : 'success'}
+      />
+    </>
+  );
+};
 
-// export default EventUserAssignment;
+export default EventUserAssignment;

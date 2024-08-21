@@ -34,7 +34,7 @@ export const EventActions = ({eventId}: EventActionsProps) => {
     }> */}
 
     <Link href={`/event/${eventId}/agenda`} style={{textDecoration:'none', color: 'inherit'}}>
-    <EventActionCard icon={<DateRangeRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Agenda'/>
+    <EventActionCard icon={<DateRangeRoundedIcon color='primary' sx={{ fontSize: '60px' }} />} title='Programme'/>
     </Link>
 
     <Link href={`mailto:wosc.world@gmail.com?subject=Event%20Contact&body=Hello,%20I%20have%20a%20question%20about%20the%20event`}  style={{textDecoration:'none', color: 'inherit'}}>
