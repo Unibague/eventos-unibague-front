@@ -38,7 +38,7 @@ const EventCard = ({event}: EventCardProps) => {
   const handleSelectedEvent = () =>{
 
     if(event.restrictedAccess == true){
-      if (session){
+      if (session?.user.id != undefined){
         //Ok then, validate if the user has access to that specific event
         const user = session.user;
         const userAccessibleEvents = user.restrictedEvents;

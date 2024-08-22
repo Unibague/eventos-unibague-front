@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
                 throw new Error(resp.data.message);
               }
               return {
-                id: resp.data.id,
+                id: "",
                 email: resp.data.email,
               };
             } catch (e: any) {
