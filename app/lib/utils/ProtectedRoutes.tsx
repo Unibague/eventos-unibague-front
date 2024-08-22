@@ -90,9 +90,9 @@ import { getEvent } from './api/getEvent';
 
    return (
      <>
-
+      {children}
      </>)
-//       {children}
+//       
 //       <Notification
 //         message={notification.message}
 //         open={notification.open}
