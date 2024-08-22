@@ -26,26 +26,21 @@ export const authOptions: NextAuthOptions = {
             if (!parsedCredentials.success) {
               throw new Error('Check your email and password syntax');
             }
-            //Credentials validated from Frontend by now
-            // const { eventId } = req.body as { eventId: string };
+            //At this point, the credentials are already validated from Frontend
 
+            //Now validate them from backend
             const userData = parsedCredentials.data
             const http = HttpClient.getInstance();
             await http.get('sanctum/csrf-cookie');
-            const data = { user: userData};
             try {
-              const resp = await http.post('api/auth/credentials/validate', data);
+              const resp = await http.post('api/auth/credentials/validate', {user: userData});
               if (resp.data.status === 'error') {
                 throw new Error(resp.data.message);
               }
-
               return {
-                id: "",
+                id: resp.data.id,
                 email: resp.data.email,
-                eventsAvailable: resp.data.eventsAvailable
               };
-
-              // return {user: resp.data};
             } catch (e: any) {
               throw new Error(e.response?.data?.message || "Unknown error");
             }
@@ -61,20 +56,19 @@ export const authOptions: NextAuthOptions = {
 
         async jwt({ token, user }) {
           // If user object exists, store it in the token
-          return {...token, ...user};
+          return {...token, user};
         },
 
-        async session({ session, token}) {
-          
+        async session({ session, token, user}) {
           session.user = {...token}
           try {
             if (session.user?.email) {
               const http = HttpClient.getInstance();
-              const resp = await http.post('api/userInfo', {email:session.user?.email});
-              session.user = resp.data.user
+              const resp = await http.get(`api/users/${session.user?.email}`);
+              session.user = convertSnakeToCamel(resp.data);
               }
           } catch (error) {
-            console.error("Error fetching user roles:", error);
+            console.error("Error fetching user data from backend:", error);
           }
           return session;
         },

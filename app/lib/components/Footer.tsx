@@ -1,14 +1,13 @@
-import { Box, Container, Typography } from "@mui/material";
-import { Event } from "../types";
-import Image from "next/image";
-import { format, parseISO, isSameYear } from "date-fns";
+import { Box, Container, Typography } from '@mui/material';
+import { Event } from '../types';
+import Image from 'next/image';
+import { format, parseISO, isSameYear } from 'date-fns';
 
 interface FooterProps {
   event?: Event; // Making event optional
 }
 
 const Footer = ({ event }: FooterProps) => {
-
   const formatDateRange = (startDateString: string, endDateString: string) => {
     const startDate = parseISO(startDateString);
     const endDate = parseISO(endDateString);
@@ -23,15 +22,15 @@ const Footer = ({ event }: FooterProps) => {
   return (
     <Box
       sx={{
-        position: 'fixed',  // Fixed position to stay at the bottom
+        position: 'fixed', // Fixed position to stay at the bottom
         bottom: 0,
         left: 0,
         zIndex: 1100, // Ensure the footer stays above other content
-        width: "100%",
+        width: '100%',
         // height: "auto",
-        backgroundColor: "primary.main",
-        paddingTop: event ? "1rem" : "0.5rem", // Less padding if no event
-        paddingBottom: event ? "1rem" : "0.5rem", // Less padding if no event
+        backgroundColor: 'primary.main',
+        paddingTop: event ? '1rem' : '0.5rem', // Less padding if no event
+        paddingBottom: event ? '1rem' : '0.5rem', // Less padding if no event
         display: 'flex',
         alignItems: 'center',
         justifyContent: event ? 'space-between' : 'center', // Center the logo if no event
@@ -40,10 +39,10 @@ const Footer = ({ event }: FooterProps) => {
       <Container maxWidth="lg">
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: event ? "space-between" : "center", // Center the logo if no event
-            flexWrap: "nowrap",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: event ? 'space-between' : 'center', // Center the logo if no event
+            flexWrap: 'nowrap',
           }}
         >
           {event && (
@@ -51,8 +50,8 @@ const Footer = ({ event }: FooterProps) => {
               sx={{
                 flexGrow: 1,
                 flexShrink: 1,
-                minWidth: "150px",
-                maxWidth: "calc(100% - 320px)",
+                minWidth: '150px',
+                maxWidth: 'calc(100% - 320px)',
               }}
             >
               <Typography variant="subtitle2" color="white" noWrap>
@@ -65,11 +64,11 @@ const Footer = ({ event }: FooterProps) => {
           )}
           <Box
             sx={{
-              position: "relative",
-              width: { xs: 230, sm: 280 },
+              position: 'relative',
+              width: { xs: 190, sm: 280 },
               height: { xs: 40, sm: 100 },
               flexShrink: 0,
-              marginLeft: event ? "1rem" : 0,
+              marginLeft: event ? '1rem' : 0,
             }}
           >
             <Image

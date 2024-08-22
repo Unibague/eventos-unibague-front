@@ -4,7 +4,7 @@ import { Box, Container } from '@mui/material';
 
 interface HomePageParams {
   params: {
-    id: number;
+    id: string;
   };
 }
 
@@ -36,7 +36,7 @@ const HomePage = ({ params }: HomePageParams) => {
           sx={{
             display: 'flex',
             justifyContent: 'space-around', // Center EventActions horizontally
-            paddingY: 1, // Add padding if needed
+            paddingY: 3, // Add padding if needed
           }}
         >
           <EventActions eventId={eventId} />

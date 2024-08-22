@@ -78,8 +78,8 @@ const UsersTable: React.FC<UserManagementProps> = ({ users, roles, onUserRolesUp
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="user management table">
+      <TableContainer component={Paper} >
+        <Table aria-label="user management table">
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>

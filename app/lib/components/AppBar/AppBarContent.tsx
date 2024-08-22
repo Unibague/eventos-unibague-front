@@ -20,9 +20,7 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [hasUnreadMessages, setHasUnreadMessages] = useState(session?.user?.hasUnreadMessages);
-
-  console.log(session);
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(session?.user?.hasUnreadMessages ?? false);
 
   const handleHomeClick = () => {
     router.push('/landing');
@@ -33,7 +31,8 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
   };
 
   const handleBadgeClick = async () => {
-    try { const http = HttpClient.getInstance()
+    try {
+      const http = HttpClient.getInstance();
       await http.get(`/api/users/${session?.user?.id}/markReadMessages`);
       setHasUnreadMessages(false);
     } catch (error) {
@@ -42,21 +41,22 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-
-        const http = HttpClient.getInstance()
-        const response = await http.get(`/api/users/${session?.user?.id}/hasUnreadMessages`);
-        if (response.data.hasUnreadMessages !== hasUnreadMessages) {
-          setHasUnreadMessages(response.data.hasUnreadMessages);
+    if (session?.user?.id) {
+      const interval = setInterval(async () => {
+        try {
+          const http = HttpClient.getInstance();
+          const response = await http.get(`/api/users/${session.user.id}/hasUnreadMessages`);
+          if (response.data.hasUnreadMessages !== hasUnreadMessages) {
+            setHasUnreadMessages(response.data.hasUnreadMessages);
+          }
+        } catch (error) {
+          console.error('Failed to fetch unread messages status:', error);
         }
-      } catch (error) {
-        console.error('Failed to fetch unread messages status:', error);
-      }
-    }, 10000); // Polling interval: 5 seconds
+      }, 10000); // Polling interval: 10 seconds
 
-    return () => clearInterval(interval);
-  }, [event.id, hasUnreadMessages]);
+      return () => clearInterval(interval);
+    }
+  }, [session?.user?.id, hasUnreadMessages, event.id]);
 
   return (
     <Toolbar>
@@ -85,19 +85,20 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
         </IconButton>
       </Link>
 
-
       <Box sx={{ flexGrow: 1 }} />
 
       {session && <Typography fontSize={16} fontWeight='bold'>{session.user.name}</Typography>}
 
       <Link href={`/event/${event.id}/messages/view`} passHref>
         <IconButton 
-        color="secondary" 
-        sx={{ display: 'flex' }}
-        onClick={handleBadgeClick}>
+          color="secondary" 
+          sx={{ display: 'flex' }}
+          onClick={handleBadgeClick}
+        >
           <Badge color="error" 
-          variant="dot" 
-          invisible={!hasUnreadMessages}>
+            variant="dot" 
+            invisible={!hasUnreadMessages}
+          >
             <NotificationsIcon sx={{ fontSize: '28px' }} /> 
           </Badge>
         </IconButton>

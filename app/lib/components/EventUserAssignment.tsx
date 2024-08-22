@@ -30,15 +30,16 @@ const EventUserAssignment: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [admins, setAdmins] = useState<User[]>([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const [notificationType, setNotificationType] = useState<'success' | 'error'>(
     'success',
   );
+  const [isLoading, setIsLoading] = useState(true); // Loading state for data fetching
   const [isSending, setIsSending] = useState(false);
 
   async function getEvents() {
+    setIsLoading(true);
     try {
       const http = HttpClient.getInstance();
       let response = await http.get('/api/events/', {
@@ -51,10 +52,13 @@ const EventUserAssignment: React.FC = () => {
       console.log(events);
     } catch (error) {
       console.error('Failed to fetch events:', error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function getUsers() {
+    setIsLoading(true);
     try {
       const http = HttpClient.getInstance();
       let response = await http.get('/api/users');
@@ -64,6 +68,8 @@ const EventUserAssignment: React.FC = () => {
       setUsers(users as User[]);
     } catch (error) {
       console.error('Failed to fetch users:', error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -80,19 +86,19 @@ const EventUserAssignment: React.FC = () => {
 
   const handleUserSelect = (user: User, isAdmin: boolean) => {
     if (selectedEvent) {
-        if (isAdmin) {
-            setAdmins((prev) =>
-              prev.some((u) => u.id === user.id)
-                ? prev.filter((u) => u.id !== user.id)
-                : [...prev, user],
-            );
-          } else {
-            setSelectedUsers((prev) =>
-              prev.some((u) => u.id === user.id)
-                ? prev.filter((u) => u.id !== user.id)
-                : [...prev, user],
-            );
-          }
+      if (isAdmin) {
+        setAdmins((prev) =>
+          prev.some((u) => u.id === user.id)
+            ? prev.filter((u) => u.id !== user.id)
+            : [...prev, user],
+        );
+      } else {
+        setSelectedUsers((prev) =>
+          prev.some((u) => u.id === user.id)
+            ? prev.filter((u) => u.id !== user.id)
+            : [...prev, user],
+        );
+      }
     }
   };
 
@@ -116,7 +122,7 @@ const EventUserAssignment: React.FC = () => {
         const updatedEvent = {
           ...selectedEvent,
           users: selectedUsers, // Keep the current selected users in the event
-          admins: admins  
+          admins: admins,
         };
 
         setSelectedEvent(updatedEvent); // Update the selected event with the current users
@@ -141,90 +147,100 @@ const EventUserAssignment: React.FC = () => {
         }}
       >
         <Typography variant="h4" gutterBottom align="center">
-          Event User Assignment
+          Event Users Assignment
         </Typography>
 
-        <List>
-          {events.map((event) => (
-            <Accordion key={event.id} onChange={() => handleEventClick(event)}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{event.name}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container spacing={1}>
-                  <Grid item xs={6}>
-                    <Typography variant="h6" gutterBottom>
-                      Allowed Assistants
-                    </Typography>
-                    <FormControl component="fieldset" variant="standard">
-                      <FormGroup>
-                        {users.map((user) => (
-                          <FormControlLabel
-                            key={user.id}
-                            control={
-                              <Checkbox
-                                checked={selectedUsers.some(
-                                  (u) => u.id === user.id,
-                                )}
-                                onChange={() => handleUserSelect(user)}
-                              />
-                            }
-                            label={user.name}
-                          />
-                        ))}
-                      </FormGroup>
-                    </FormControl>
+        {isLoading ? (
+          <Box textAlign="center" p={2}>
+            <CircularProgress />
+            <Typography variant="body1" mt={2}>
+              Loading data...
+            </Typography>
+          </Box>
+        ) : (
+          <List>
+            {events.map((event) => (
+              <Accordion
+                key={event.id}
+                onChange={() => handleEventClick(event)}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>{event.name}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="h6" gutterBottom>
+                        Allowed Assistants
+                      </Typography>
+                      <FormControl component="fieldset" variant="standard">
+                        <FormGroup>
+                          {users.map((user) => (
+                            <FormControlLabel
+                              key={user.id}
+                              control={
+                                <Checkbox
+                                  checked={selectedUsers.some(
+                                    (u) => u.id === user.id,
+                                  )}
+                                  onChange={() => handleUserSelect(user, false)}
+                                />
+                              }
+                              label={user.name}
+                            />
+                          ))}
+                        </FormGroup>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="h6" gutterBottom>
+                        Event Admins
+                      </Typography>
+                      <FormControl component="fieldset" variant="standard">
+                        <FormGroup>
+                          {users.map((user) => (
+                            <FormControlLabel
+                              key={user.id}
+                              control={
+                                <Checkbox
+                                  checked={admins.some((u) => u.id === user.id)}
+                                  onChange={() => handleUserSelect(user, true)}
+                                />
+                              }
+                              label={user.name}
+                            />
+                          ))}
+                        </FormGroup>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-
-                  <Grid item xs={6}>
-                    <Typography variant="h6" gutterBottom>
-                      Event Admins
-                    </Typography>
-
-                    <FormControl component="fieldset" variant="standard">
-                      <FormGroup>
-                        {users.map((user) => (
-                          <FormControlLabel
-                            key={user.id}
-                            control={
-                              <Checkbox
-                                checked={admins.some((u) => u.id === user.id)}
-                                onChange={() => handleUserSelect(user, true)}
-                              />
-                            }
-                            label={user.name}
-                          />
-                        ))}
-                      </FormGroup>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Box textAlign='right'>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSaveAssignments}
-                  disabled={isSending}
-                  sx={{ mt: 3 }}
-                >
-                  {isSending ? (
-                    <CircularProgress size={24} />
-                  ) : (
-                    'Save Assignments'
-                  )}
-                </Button>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </List>
+                  <Box textAlign="right">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSaveAssignments}
+                      disabled={isSending}
+                      sx={{ mt: 3 }}
+                    >
+                      {isSending ? (
+                        <CircularProgress size={24} />
+                      ) : (
+                        'Save Assignments'
+                      )}
+                    </Button>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </List>
+        )}
       </Box>
 
       <Notification
         message={notificationMessage}
         open={notificationOpen}
         onClose={() => setNotificationOpen(false)}
-        snackbarColor={notificationType === 'error' ? 'error' : 'success'}
+        snackbarColor={notificationType === 'error' ? 'red' : 'green'}
       />
     </>
   );

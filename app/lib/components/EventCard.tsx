@@ -41,7 +41,7 @@ const EventCard = ({event}: EventCardProps) => {
       if (session){
         //Ok then, validate if the user has access to that specific event
         const user = session.user;
-        const userAccessibleEvents = user.eventsAvailable;
+        const userAccessibleEvents = user.restrictedEvents;
         const hasAccess = userCanAccessEvent(event.id, userAccessibleEvents)
         if (hasAccess){
           router.push( `/event/${event.id}/home`);

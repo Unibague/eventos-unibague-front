@@ -3,6 +3,10 @@ export interface User {
   name: string;
   email: string;
   unreadMessages: boolean;
+  eventsAdmin: Event[],
+  restrictedEvents : Event[],
+  nonRestrictedEvents : Event[],
+  accessibleEvents: Event[],
   roles: Role[];
 }
 

@@ -1,82 +1,101 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import LoadingScreen from "@/app/lib/components/Loading";
-import { useSession } from "next-auth/react";
-import { userCanAccessEvent } from "./userCanAccessEvent";
-import { HttpClient } from "../Http/HttpClient";
-import Notification from "../components/Notification";
+import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import LoadingScreen from '@/app/lib/components/Loading';
+import { useSession } from 'next-auth/react';
+import { userCanAccessEvent } from './userCanAccessEvent';
+import Notification from '../components/Notification';
+import { Role } from '../types';
+import { getEvent } from './api/getEvent';
+
+// Custom hook for notification
+const useNotification = () => {
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+  });
+  const showNotification = (message: string) =>
+    setNotification({ open: true, message });
+  const closeNotification = () => setNotification({ open: false, message: '' });
+  return { notification, showNotification, closeNotification };
+};
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
-  const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const [isVerifying, setIsVerifying] = useState(true);
-  const [notificationOpen, setNotificationOpen] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState('');
+  const { notification, showNotification, closeNotification } =
+    useNotification();
+  const { data: session, status } = useSession();
+
+  const checkEventAccess = async (eventId: number) => {
+    const event = await getEvent(eventId);
+    if (!event?.restrictedAccess) return true;
+
+    if (!session?.user) {
+      router.replace('/auth/login');
+      return false;
+    }
+    if (!session.user.id) return false;
+    return userCanAccessEvent(eventId, session.user.accessibleEvents);
+  };
+
+  const checkAdminAccess = () => {
+    if (!session?.user) return false;
+    return (
+      session.user.roles?.some((role: Role) => role.name === 'admin') ?? false
+    );
+  };
 
   useEffect(() => {
     const checkAccess = async () => {
       const eventRoutes = /^\/event\/(\d+)\/(.+)/;
       const adminRoutes = /^\/admin/;
-
-      if (eventRoutes.test(pathname) ) {
+      if (eventRoutes.test(pathname)) {
         const match = pathname.match(eventRoutes);
         if (match) {
           const eventId = parseInt(match[1]);
-
-          if (session?.user) {
-            try {
-              const http = HttpClient.getInstance();
-              const resp = await http.post('api/userInfo', { email: session.user?.email });
-              session.user = resp.data.user;
-
-              const accessible = userCanAccessEvent(eventId, session.user.eventsAvailable);
-
-              if (!accessible) {
-                setNotificationMessage("No tienes permiso para acceder a esta página");
-                setNotificationOpen(true);
-                router.replace('/landing');
-                return; // Early return to prevent further processing
-              }
-            } catch (error) {
-              console.error("Error fetching user info:", error);
-              setNotificationMessage("Error fetching user info");
-              setNotificationOpen(true);
-              router.replace('/landing');
-              return; // Early return to prevent further processing
-            }
+          const canAccess = await checkEventAccess(eventId);
+          if (!canAccess) {
+            showNotification('No tienes permiso para acceder a esta página');
+            router.replace('/landing');
+            return;
           }
         }
+      } else if (adminRoutes.test(pathname)) {
+        if (!checkAdminAccess()) {
+          showNotification('No tienes permisos para acceder a esta página');
+          router.replace('/landing');
+          return;
+        }
       }
-
-      // if (adminRoutes.test(pathname)){
-
-      // }
-
-      setIsVerifying(false); // Set verification status to false once checks are done
+      setIsVerifying(false);
     };
 
-    checkAccess();
+    // Early return if session is null or session.user.id is undefined
+    if (session === null || session.user?.id === undefined) {
+      setIsVerifying(false); // Set to false to stop showing loading screen
+      return;
+    }
+
+    //Only do this if the user is not logged or there's already a logged user!
+    if (session == null || session.user?.id !== undefined) {
+      checkAccess();
+    }
+      
   }, [pathname, router, session]);
 
-  const handleNotificationClose = () => {
-    setNotificationOpen(false);
-  };
-
-  if (isVerifying) {
-    return <LoadingScreen />;
-  }
+  if (isVerifying) return <LoadingScreen />;
 
   return (
     <>
       {children}
       <Notification
-        message={notificationMessage}
-        open={notificationOpen}
-        onClose={handleNotificationClose}
-        snackbarColor="red" // Assuming you want red for error messages
+        message={notification.message}
+        open={notification.open}
+        onClose={closeNotification}
+        snackbarColor="red"
       />
     </>
   );

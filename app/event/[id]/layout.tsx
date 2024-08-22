@@ -46,7 +46,6 @@ export default async function EventLayout({ children, params }: EventLayoutProps
   const eventId = params.id 
   const event = await getEvent(eventId);
   const eventLogo = await getEventLogo(eventId);
-  // console.log(eventLogo);
 
   return (
     <Box
@@ -68,7 +67,7 @@ export default async function EventLayout({ children, params }: EventLayoutProps
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          paddingBottom: '64px', // Adjust this to the height of your footer if needed
+          paddingBottom: '3vh', // Adjust this to the height of your footer if needed
         }}
       >
         {children}

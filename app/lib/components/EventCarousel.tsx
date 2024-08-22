@@ -6,10 +6,10 @@ import { convertSnakeToCamel } from '../utils';
 import EventCarouselList from './EventCarouselList';
 
 interface EventCarouselProps {
-  eventId: number;
+  eventId: string;
 }
 
-async function getEventFiles(eventId: number): Promise<EventFile[] | null> {
+async function getEventFiles(eventId: string): Promise<EventFile[] | null> {
     
     try {
       const http = HttpClient.getInstance();
