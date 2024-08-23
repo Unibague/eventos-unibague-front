@@ -12,10 +12,11 @@ export class AxiosAdapter implements IHttpAdapter{
 
         const xsrfToken = Cookies.get('XSRF-TOKEN');
 
+        console.log(Cookies.get());
+
         let config: AxiosRequestConfig = {
             baseURL: process.env.apiUrl as string,
             withCredentials: true,
-            withXSRFToken: true,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`,
