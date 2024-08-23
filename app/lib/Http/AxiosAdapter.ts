@@ -1,21 +1,25 @@
 import axios ,{ AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import {IHttpAdapter } from "./IHttpAdapter";
 import { redirect } from "next/navigation";
+import Cookies from "js-cookie";  // Add this import to handle cookies
 
 export class AxiosAdapter implements IHttpAdapter{
     
     private axiosInstance: AxiosInstance;
-    private csrfTokenFetched: boolean = false;
-
+    
     
     constructor(token?: string){
+
+        const xsrfToken = Cookies.get('XSRF-TOKEN');
+
         let config: AxiosRequestConfig = {
             baseURL: process.env.apiUrl as string,
             withCredentials: true,
             withXSRFToken: true,
             headers: {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'X-XSRF-TOKEN': xsrfToken ?? '' 
             }
         };
         this.axiosInstance = axios.create(config)
@@ -24,17 +28,6 @@ export class AxiosAdapter implements IHttpAdapter{
     public async get(url: string, params?:any): Promise<any> {
         const response = await this.axiosInstance.get(url, params);
         return response;
-        //    let axiosError: AxiosError | null = null;
-        // try {
-        //     const response = await this.axiosInstance.get<T>(url);
-        //     return response.data;
-        // } catch (error) {
-        //     axiosError = error as AxiosError
-        // } finally{
-        //     if (axiosError){
-        //         this.handleError(axiosError as AxiosError)
-        //     } 
-        //  }
       }
 
     public async post(url: string, data: any): Promise<any>{
