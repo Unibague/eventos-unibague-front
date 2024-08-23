@@ -27,7 +27,7 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   const [isVerifying, setIsVerifying] = useState(true);
   const { notification, showNotification, closeNotification } =
     useNotification();
-  const { data: session, status } = useSession();
+  const { data: session, update: refetchSession } = useSession();
 
   const checkEventAccess = async (eventId: number) => {
     const event = await getEvent(eventId);
@@ -73,15 +73,22 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
       setIsVerifying(false);
     };
 
-    // Early return if session is null or session.user.id is undefined
-    if (session === null || session.user?.id === undefined) {
-      setIsVerifying(false); // Set to false to stop showing loading screen
-      return;
-    }
+    // // Early return if session is null or session.user.id is undefined
+    // if (session === null || session.user?.id === undefined) {
+    //   return;// Set to false to stop showing loading screen
+    // }
+
+    // else{
+      
+    // }
 
     //Only do this if the user is not logged or there's already a logged user!
     if (session == null || session.user?.id !== undefined) {
       checkAccess();
+    }
+
+    else{
+      refetchSession();
     }
       
   }, [pathname, router, session]);
