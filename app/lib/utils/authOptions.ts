@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
 
         async jwt({ token, user }) {
           // If user object exists, store it in the token
-          return {...token, user};
+          return {...token, ...user};
         },
 
         async session({ session, token, user}) {
