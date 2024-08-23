@@ -59,12 +59,12 @@ export const authOptions: NextAuthOptions = {
           return {...token, ...user};
         },
 
-        async session({ session, token, user}) {
+        async session({ session, token}) {
           session.user = {...token}
           try {
             if (session.user?.email) {
               const http = HttpClient.getInstance();
-              const resp = await http.get(`api/users/${session.user?.email}`);
+              const resp = await http.post('api/userInfo', {email:session.user?.email});
               session.user = convertSnakeToCamel(resp.data);
               }
           } catch (error) {
