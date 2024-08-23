@@ -6,7 +6,7 @@ import { HttpClient } from '@/app/lib/Http/HttpClient'; // Adjust the import pat
 export const updateUserRoles = async (userId: string, roles: Role[]): Promise<void> => {
   try {
     const http = HttpClient.getInstance();
-    await http.put(`/api/users/${userId}/roles`, {
+    await http.post(`/api/users/${userId}/roles`, {
     roles: roles.map(role => role.id),
     });
     
