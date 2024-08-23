@@ -73,11 +73,14 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
       setIsVerifying(false);
     };
 
-    // Early return if session is null or session.user.id is undefined
-    if (session === null || session.user?.id === undefined) {
-      setIsVerifying(false); // Set to false to stop showing loading screen
-      return;
-    }
+    // // Early return if session is null or session.user.id is undefined
+    // if (session === null || session.user?.id === undefined) {
+    //   return;// Set to false to stop showing loading screen
+    // }
+
+    // else{
+      
+    // }
 
     //Only do this if the user is not logged or there's already a logged user!
     if (session == null || session.user?.id !== undefined) {

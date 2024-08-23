@@ -37,6 +37,9 @@ export const authOptions: NextAuthOptions = {
               if (resp.data.status === 'error') {
                 throw new Error(resp.data.message);
               }
+
+              console.log(resp.data, 'respuesta del back que valida las credenciales')
+
               return {
                 id: "",
                 email: resp.data.email,
@@ -56,16 +59,27 @@ export const authOptions: NextAuthOptions = {
 
         async jwt({ token, user }) {
           // If user object exists, store it in the token
+
+          console.log(user, 'objeto user inicial, que es el que usaremos para mandar el email')
           return {...token, ...user};
         },
 
         async session({ session, token}) {
           session.user = {...token}
+
+          console.log(token, 'lo que viene en el token')
+          
+          console.log(session.user, 'objeto session user inicial, con la data inicial de la sesion')
           try {
             if (session.user?.email) {
               const http = HttpClient.getInstance();
               const resp = await http.post('api/userInfo', {email:session.user?.email});
+
+              console.log(resp.data, 'Información del user devuelta por el back que será asignada al session.user')
+
               session.user = convertSnakeToCamel(resp.data);
+
+
               }
           } catch (error) {
             console.error("Error fetching user data from backend:", error);
