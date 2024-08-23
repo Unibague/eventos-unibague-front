@@ -73,16 +73,9 @@ export const authOptions: NextAuthOptions = {
           try {
             if (session.user?.email) {
               const http = HttpClient.getInstance();
-              // const resp = await http.post('api/userInfo', {email:session.user?.email});
-
-              const resp = await http.get(`api/users/${session.user?.email}`);
-
-
+              const resp = await http.post('api/userInfo', {email:session.user?.email});
               console.log(resp.data, 'Información del user devuelta por el back que será asignada al session.user')
-
               session.user = convertSnakeToCamel(resp.data);
-
-
               }
           } catch (error) {
             console.error("Error fetching user data from backend:", error);
