@@ -60,7 +60,7 @@ export default function LandingBar() {
                 marginRight: 1,
               }}
             />
-            <Typography variant="h6" fontSize={18} sx={{ color: 'white' }}>
+            <Typography variant="h6" fontSize={18} sx={{ color: 'white', marginRight:2 }}>
               Eventos
             </Typography>
           </Box>
@@ -69,14 +69,30 @@ export default function LandingBar() {
 
           {session.data?.user?.id ? (
             <>
-              <Typography variant="h6" fontSize={15} sx={{ color: 'white', marginRight: 2 }}>
+              <Typography
+                variant="h6"
+                fontSize={15}
+                sx={{
+                  maxWidth: '150px', // Set a max width to prevent overflow
+                  overflow: 'hidden', // Hide overflow
+                  whiteSpace: 'nowrap', // Prevent text from wrapping to next line
+                  textOverflow: 'ellipsis', // Show "..." if the text is too long
+                  color: 'white',
+                }}
+              >
                 {session.data?.user?.name}
               </Typography>
 
-              {session.data?.user?.roles.some((role: Role) => role.name === 'admin') && (
+              {session.data?.user?.roles.some(
+                (role: Role) => role.name === 'admin',
+              ) && (
                 <>
                   <Tooltip title="Actions">
-                    <IconButton size="large" onClick={handleMenuOpen} sx={{ color: 'white' }}>
+                    <IconButton
+                      size="large"
+                      onClick={handleMenuOpen}
+                      sx={{ color: 'white' }}
+                    >
                       <MoreVertIcon />
                     </IconButton>
                   </Tooltip>
@@ -90,13 +106,19 @@ export default function LandingBar() {
                       },
                     }}
                   >
-                    <MenuItem onClick={() => handleNavigation('/admin/users/add')}>
+                    <MenuItem
+                      onClick={() => handleNavigation('/admin/users/add')}
+                    >
                       Add Users
                     </MenuItem>
-                    <MenuItem onClick={() => handleNavigation('/admin/users/view')}>
+                    <MenuItem
+                      onClick={() => handleNavigation('/admin/users/view')}
+                    >
                       Manage Users
                     </MenuItem>
-                    <MenuItem onClick={() => handleNavigation('/admin/users/events')}>
+                    <MenuItem
+                      onClick={() => handleNavigation('/admin/users/events')}
+                    >
                       Manage Events
                     </MenuItem>
                   </Menu>

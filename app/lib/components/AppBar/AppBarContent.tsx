@@ -52,7 +52,7 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
         } catch (error) {
           console.error('Failed to fetch unread messages status:', error);
         }
-      }, 10000); // Polling interval: 10 seconds
+      }, 10000); // Polling interval: 100 seconds = 1,6 minutes
 
       return () => clearInterval(interval);
     }
@@ -87,7 +87,17 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {session && <Typography fontSize={16} fontWeight='bold'>{session.user.name}</Typography>}
+      {session && <Typography 
+      fontSize={16}
+      fontWeight="bold"
+      sx={{
+        maxWidth: '150px', // Set a max width to prevent overflow
+        overflow: 'hidden', // Hide overflow
+        whiteSpace: 'nowrap', // Prevent text from wrapping to next line
+        textOverflow: 'ellipsis', // Show "..." if the text is too long
+      }}
+      >
+        {session.user.name}</Typography>}
 
       <Link href={`/event/${event.id}/messages/view`} passHref>
         <IconButton 
