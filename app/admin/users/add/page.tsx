@@ -19,7 +19,7 @@ const CreateUserPage = () => {
         console.log(userData);
         try {
             const http = HttpClient.getInstance();
-            await http.post('/api/users', { users: userData });
+            await http.post('/api/users/create', { users: [userData] });
             setNotificationMessage('User created successfully');
             setNotificationOpen(true);
         } catch (error: any) {
