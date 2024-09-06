@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   }}
                 />
                 <Typography variant="h6" fontSize={18} sx={{ color: 'white', alignContent:'center' }}>
-                  Eventos
+                  Events
                 </Typography>
             </Link>
             <Box sx={{ flexGrow: 1 }} />

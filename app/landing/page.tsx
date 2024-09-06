@@ -83,7 +83,7 @@ const EventsLandingPage = () => {
           }}
         >
           <Typography variant="h6" component="div">
-            Todos los eventos
+            All Events
           </Typography>
         </Box>
 

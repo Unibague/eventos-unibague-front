@@ -63,7 +63,7 @@ const AddMessageCard = () => {
       >
         <Card sx={{ width: '100%', maxWidth: '800px', padding: '20px', boxShadow: 3 }}>
           <Typography variant="h6" gutterBottom>
-            Add a Message
+            Add a message
           </Typography>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Share your message with everyone in the event.

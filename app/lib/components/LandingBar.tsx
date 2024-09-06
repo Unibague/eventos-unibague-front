@@ -61,7 +61,7 @@ export default function LandingBar() {
               }}
             />
             <Typography variant="h6" fontSize={18} sx={{ color: 'white', marginRight:2 }}>
-              Eventos
+              Events
             </Typography>
           </Box>
 

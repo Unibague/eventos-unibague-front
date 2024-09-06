@@ -15,8 +15,6 @@ interface AgendaPageProps {
   };
 }
 
-
-
 const AgendaPage = ({ params }: AgendaPageProps) => {
   const { id: eventId } = params;
   const [eventMeetings, setEventMeetings] = useState<EventMeeting[] | null>(null);
@@ -29,7 +27,6 @@ const AgendaPage = ({ params }: AgendaPageProps) => {
   useEffect(() => {
 
     const fetchEventMeetings = async () => {
-
       try {
         const http = HttpClient.getInstance();
         const response = await http.get(`/api/event/${eventId}/meetings`);
@@ -43,7 +40,6 @@ const AgendaPage = ({ params }: AgendaPageProps) => {
     };
 
     const getEventInfo = async () => {
-
       try {
           const http = HttpClient.getInstance();
           const response = await http.get(`/api/events/${eventId}`);

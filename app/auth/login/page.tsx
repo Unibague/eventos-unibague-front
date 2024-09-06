@@ -10,7 +10,11 @@ import {
   TextField,
   Alert,
   Container,
+  Typography,
+  Paper,
+  Avatar,
 } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 function LoginPage() {
   const {
@@ -20,18 +24,15 @@ function LoginPage() {
   } = useForm();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-
   const searchParams = useSearchParams();
   const eventId = searchParams.get('eventId');
 
   const onSubmit = handleSubmit(async (data) => {
-
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
       redirect: false,
     });
-
     if (res?.error) {
       setError(res.error);
     } else {
@@ -41,102 +42,111 @@ function LoginPage() {
   });
 
   const handleGoogleSignIn = async () => {
-    const res = await signIn('google' , { callbackUrl: 'http://localhost:3000/landing' });
+    const res = await signIn('google', {
+      callbackUrl: 'http://localhost:3000/landing',
+    });
     if (res?.error) {
       setError(res.error);
     } else {
-
-        router.push(`/landing`);
-        return;
-
-      // router.push(`/event/${eventId}/home`);
-      // router.refresh();
+      router.push(`/landing`);
+      return;
     }
   };
 
   return (
-    <Container
-      sx={{
-        height: 'calc(100vh - 7rem)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Box
-        component="form"
-        onSubmit={onSubmit}
+    <Container component="main" maxWidth="xs">
+      <Paper
+        elevation={6}
         sx={{
-          width: '100%',
-          maxWidth: 400,
-          backgroundColor: 'background.paper',
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           padding: 4,
           borderRadius: 2,
-          boxShadow: 1,
         }}
       >
-        {/* {
-          eventId && <Alert color="warning">
-          This is a restricted event, please sign in to continue.
-        </Alert>
-        } */}
-
-        {error && (
-          <Alert severity="error" sx={{ marginY: 2, }}>
-            {error}
+        <Box
+          component="img"
+          src="/images/pwa-icons/icon-512x512.png"
+          alt="Eventos Logo"
+          sx={{
+            width: 75,
+            height: 75,
+            borderRadius: '30%',
+            marginRight: 1,
+          }}
+        />
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ mb: 3, fontWeight: 'bold', color: 'primary.main' }}
+        >
+          Unibagué Events
+        </Typography>
+        <Box component="form" onSubmit={onSubmit} sx={{ mt: 1, width: '100%' }}>
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            You must log in to continue
           </Alert>
-        )}
-
-        <TextField
-          label="Email"
-          type="email"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-          placeholder="example@domain.com"
-          {...register('email', {
-            required: 'Email is required',
-          })}
-          error={!!errors.email}
-          helperText={typeof errors.email?.message === 'string' ? errors.email.message : ''}
-        />
-
-        <TextField
-          label="Password"
-          type="password"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-          placeholder="******"
-          {...register('password', {
-            required: 'Password is required',
-          })}
-          error={!!errors.password}
-          helperText={typeof errors.password?.message === 'string' ? errors.password.message : ''}
-        />
-
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: 2 }}
-        >
-          Login
-        </Button>
-
-
-        {/* <Button
-          onClick={handleGoogleSignIn}
-          fullWidth
-          variant="outlined"
-          color="primary"
-          sx={{ marginTop: 2 }}
-        >
-          Unibagué Login
-        </Button> */}
-
-      </Box>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          <TextField
+            label="Email"
+            type="email"
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            placeholder="example@domain.com"
+            {...register('email', {
+              required: 'Email is required',
+            })}
+            error={!!errors.email}
+            helperText={
+              typeof errors.email?.message === 'string'
+                ? errors.email.message
+                : ''
+            }
+          />
+          <TextField
+            label="Password"
+            type="password"
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            placeholder="******"
+            {...register('password', {
+              required: 'Password is required',
+            })}
+            error={!!errors.password}
+            helperText={
+              typeof errors.password?.message === 'string'
+                ? errors.password.message
+                : ''
+            }
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Log In
+          </Button>
+          {/* <Button
+            onClick={handleGoogleSignIn}
+            fullWidth
+            variant="outlined"
+            color="primary"
+            sx={{ mb: 2 }}
+          >
+            Unibagué Login
+          </Button> */}
+        </Box>
+      </Paper>
     </Container>
   );
 }

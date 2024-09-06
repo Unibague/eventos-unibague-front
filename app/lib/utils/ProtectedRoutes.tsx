@@ -58,14 +58,14 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
           const eventId = parseInt(match[1]);
           const canAccess = await checkEventAccess(eventId);
           if (!canAccess) {
-            showNotification('No tienes permiso para acceder a esta página');
+            showNotification("You don't have access to this resource");
             router.replace('/landing');
             return;
           }
         }
       } else if (adminRoutes.test(pathname)) {
         if (!checkAdminAccess()) {
-          showNotification('No tienes permisos para acceder a esta página');
+          showNotification("You don't have access to this resource");
           router.replace('/landing');
           return;
         }

@@ -52,7 +52,7 @@ const AppBarContent = ({ event, eventLogo }: AppBarProps) => {
         } catch (error) {
           console.error('Failed to fetch unread messages status:', error);
         }
-      }, 10000); // Polling interval: 100 seconds = 1,6 minutes
+      }, 60000); // Polling interval: 100 seconds = 1,6 minutes
 
       return () => clearInterval(interval);
     }
