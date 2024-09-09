@@ -37,8 +37,8 @@ const DialogPage: React.FC<DialogPageProps> = ({
   children,
   cancelAction,
   acceptAction,
-  cancelActionLabel = 'Cancelar',
-  acceptActionLabel = 'Aceptar'
+  cancelActionLabel = 'Cancel',
+  acceptActionLabel = 'Save'
 }) => {
 
   return (
