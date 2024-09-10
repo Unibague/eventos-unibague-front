@@ -6,8 +6,6 @@ import Cookies from "js-cookie";  // Add this import to handle cookies
 export class AxiosAdapter implements IHttpAdapter{
     
     private axiosInstance: AxiosInstance;
-    
-    
     constructor(token?: string){
 
         let config: AxiosRequestConfig = {
