@@ -2,6 +2,7 @@
 import DateRangeRoundedIcon from '@mui/icons-material/DateRangeRounded';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
+import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import GroupsIcon from '@mui/icons-material/Groups';
 import InfoIcon from '@mui/icons-material/Info';
 import EventActionCard from './EventActionCard';
@@ -43,6 +44,10 @@ export const EventActions = ({ eventId }: EventActionsProps) => {
       <Link href={`https://wosc.world/index.php/wosc-congress-2024/about-the-congress/collaboration`} style={{textDecoration:'none', color: 'inherit'}}>
         <EventActionCard icon={<DateRangeRoundedIcon color='primary' sx={{ fontSize: '38px' }} />} title='In collaboration with'/>
       </Link>
+      <Link href={`https://www.google.com/maps/d/u/0/edit?mid=151uG9f4ehMvxmDzBexXbo94Tp_MN3aQ&ll=51.75316309491013%2C-1.2552777000000037&z=14`} style={{textDecoration:'none', color: 'inherit'}}>
+        <EventActionCard icon={<LocationOnRoundedIcon color='primary' sx={{ fontSize: '38px' }} />} title='Map'/>
+      </Link>
+
       {userEventsAdmin && userEventsAdmin.some((event: Event) => event.id == eventId) && (
         <Link href={`/event/${eventId}/messages/add`} style={{textDecoration:'none', color: 'inherit'}}>
           <EventActionCard icon={<InsertCommentRoundedIcon color='primary' sx={{ fontSize: '38px' }} />} title='Message' />
