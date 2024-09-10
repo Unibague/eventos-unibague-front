@@ -67,7 +67,7 @@ export default async function EventLayout({ children, params }: EventLayoutProps
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          paddingBottom: '3vh', // Adjust this to the height of your footer if needed
+          paddingBottom: '5vh', // Adjust this to the height of your footer if needed
         }}
       >
         {children}

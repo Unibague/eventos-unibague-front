@@ -109,9 +109,13 @@ const EventUserAssignment: React.FC = () => {
       try {
         console.log(selectedUsers, selectedEvent);
         const http = HttpClient.getInstance();
+
+        const users = selectedUsers.map(user => {
+          return user.id})
         const resp = await http.post(
           `api/event/${selectedEvent.id}/users/assign`,
-          { users: selectedUsers, admins },
+          { users, admins:  admins.map(admin => {
+            return admin.id}) },
         );
         setNotificationMessage(resp.data.message);
         setNotificationOpen(true);
