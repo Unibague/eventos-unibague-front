@@ -28,6 +28,9 @@ const AgendaContainer = ({ eventMeetings: initialEventMeetings, eventId, startDa
 
     const [currentDate, setCurrentDate] = useState(startDateObj);
     const currentTime = new Date();
+    currentTime.setHours(currentTime.getHours() + 1);
+
+
 
     const timeFormatter = new Intl.DateTimeFormat('en-GB', {
         timeZone: 'utc',
