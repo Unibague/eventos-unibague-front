@@ -1,23 +1,19 @@
-# Usamos una imagen con Node
 FROM node:18-alpine
 
-# Establecer directorio de trabajo
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copiar dependencias
+# Copia solo los archivos necesarios para instalar dependencias
 COPY package*.json ./
 
-# Instalar dependencias
-RUN npm install
+# Instala dependencias ignorando conflictos de dependencias peer
+RUN npm install --legacy-peer-deps
 
-# Copiar el resto del código
+# Copia el resto de los archivos del proyecto
 COPY . .
 
-# Construir la app (solo si quieres producción)
-RUN npm run build
-
-# Exponer el puerto de Next.js
+# Expone el puerto usado por Next.js
 EXPOSE 3000
 
-# Ejecutar la app
+# Comando por defecto para ejecutar la app
 CMD ["npm", "run", "start"]
