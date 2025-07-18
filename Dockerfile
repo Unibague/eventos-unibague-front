@@ -13,7 +13,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Expone el puerto usado por Next.js
-EXPOSE 3000
+EXPOSE 3100
 
 # Comando por defecto para ejecutar la app
 CMD ["npm", "run", "start"]
