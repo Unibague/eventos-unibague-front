@@ -4,6 +4,7 @@ services:
   frontend:
     build: .
     container_name: eventos-frontend
+    working_dir: /app
     volumes:
       - .:/app
     ports:
