@@ -3,19 +3,18 @@
 # ----------------------
 FROM node:18-alpine AS builder
 
-# Establece el directorio de trabajo
+ENV NEXT_TELEMETRY_DISABLED=1
+
 WORKDIR /app
 
-# Copia package.json y package-lock.json
+# Copia package.json e instala dependencias
 COPY package*.json ./
-
-# Instala dependencias ignorando conflictos de peer
 RUN npm install --legacy-peer-deps
 
-# Copia el resto de los archivos
+# Copia el resto del código
 COPY . .
 
-# Compila el proyecto Next.js
+# Ejecuta la build de Next.js
 RUN npm run build
 
 
@@ -24,21 +23,23 @@ RUN npm run build
 # ----------------------
 FROM node:18-alpine AS production
 
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
 WORKDIR /app
 
-# Copia dependencias e instalación desde builder
+# Copia solo las partes necesarias
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
-
-# Copia el resto del proyecto compilado
-COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.js ./next.config.js
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/app ./app
 
-# Exponer el puerto
+# Si usas otros archivos (quasar.config.js, tailwind.config.js, .env), agrégalos también:
+# COPY --from=builder /app/.env ./.env
+
 EXPOSE 3100
 
-# Iniciar el servidor de Next.js en producción
 CMD ["npm", "run", "start"]
