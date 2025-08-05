@@ -1,19 +1,44 @@
-FROM node:18-alpine
+# ----------------------
+# Etapa 1: Build
+# ----------------------
+FROM node:18-alpine AS builder
 
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia solo los archivos necesarios para instalar dependencias
+# Copia package.json y package-lock.json
 COPY package*.json ./
 
-# Instala dependencias ignorando conflictos de dependencias peer
+# Instala dependencias ignorando conflictos de peer
 RUN npm install --legacy-peer-deps
 
-# Copia el resto de los archivos del proyecto
+# Copia el resto de los archivos
 COPY . .
 
-# Expone el puerto usado por Next.js
+# Compila el proyecto Next.js
+RUN npm run build
+
+
+# ----------------------
+# Etapa 2: Producción
+# ----------------------
+FROM node:18-alpine AS production
+
+WORKDIR /app
+
+# Copia dependencias e instalación desde builder
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copia el resto del proyecto compilado
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/next.config.js ./next.config.js
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/app ./app
+
+# Exponer el puerto
 EXPOSE 3100
 
-# Comando por defecto para ejecutar la app
+# Iniciar el servidor de Next.js en producción
 CMD ["npm", "run", "start"]
