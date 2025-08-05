@@ -9,7 +9,7 @@ export class AxiosAdapter implements IHttpAdapter{
     constructor(token?: string){
 
         let config: AxiosRequestConfig = {
-            baseURL: process.env.apiUrl as string,
+            baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://api.eventos.unibague.edu.co/api',
             withCredentials: true,
             withXSRFToken: true,
             headers: {
