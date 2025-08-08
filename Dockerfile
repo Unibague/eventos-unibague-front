@@ -1,28 +1,28 @@
-# Etapa 1: build de la app
+# Etapa 1: Build de la app
 FROM node:18-alpine as builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --legacy-peer-deps
+# Usa yarn y copia el lockfile correcto
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN npm run build
+RUN yarn build
 
-# Etapa 2: contenedor de producción
+# Etapa 2: Producción
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar solo lo necesario desde el builder
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/yarn.lock ./
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/app ./app
 
-# Instalar solo dependencias de producción
-RUN npm install --production --legacy-peer-deps
+RUN yarn install --production --frozen-lockfile
 
 EXPOSE 3100
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
